@@ -81,11 +81,12 @@ Welcome to **ADS-CP** - your go-to tool for visualizing and simulating various a
 
 We welcome contributions! 🚀 Feel free to open issues or submit pull requests to enhance the simulator.
 A group project developed by -
-Kunal Sonne  ![Github](https://github.com/erenyeager101)
-Raj thakur
-Hariom surwase
-Atharva Tuljapurkar
-Shreeparth Torawane
+- Kunal Sonne
+- ![Github](https://github.com/erenyeager101)
+- Raj thakur
+- Hariom surwase
+- Atharva Tuljapurkar
+- Shreeparth Torawane
 
 ---
 
