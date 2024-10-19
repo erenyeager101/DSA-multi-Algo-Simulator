@@ -55,7 +55,7 @@ Welcome to **ADS-CP** - your go-to tool for visualizing and simulating various a
 
 <div align="center">
   <img src="https://github.com/erenyeager101/DSA-multi-Algo-Simulator/blob/main/logo/Screenshot%202024-10-20%20043706.png" width="400px" />
-  <img src="https://github.com/erenyeager101/DSA-multi-Algo-Simulator/blob/main/logo/Screenshot%202024-10-20%20043921.png" width="400px" />
+ 
 </div>
 
 ---
