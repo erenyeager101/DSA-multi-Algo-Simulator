@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Binary Search</title>
+	<style>
+		html, * {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			text-align: center;
+		}
+
+		.grid {
+			width: 1000px;
+			position: relative;
+			height: 400px;
+			background: lightgreen;
+			margin: 40px auto;
+			display: flex;
+			flex-wrap: wrap;
+			outline: 1px solid red;
+		}
+
+		p, p:nth-child(1) {
+			padding: 20px;
+			text-align: center;
+			font-family: ubuntu;
+			font-weight: bolder;
+			font-size: 20px;
+		}
+
+		.arr__controllers {
+			max-width: 500px;
+			margin: auto;
+			display: flex;
+			justify-content: space-around;
+		}
+
+		.arr__push, .arr__pop, .arr__peek {
+			padding: 10px 30px;
+		}
+
+		.arr__peek__input {
+			width: 60px;
+			padding: 10px;
+		}
+
+		.color__scheme {
+			display: flex;
+			padding: 10px;
+			justify-content: space-between;
+			border: 1px solid lightgreen;
+			margin-right: 5px;
+		}
+
+		.color__scheme > span:nth-child(1) {
+			height: 20px;
+			width: 20px;
+			padding: 5px;
+			margin-right: 20px;
+			background: lightgreen;
+		}
+
+
+		.color__scheme > span:nth-child(2) {
+			font-weight: bolder;
+			color: gray;
+			margin: 0px 20px 0 0 ;
+
+		}
+
+	</style>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+	<p>Binary Search</p>
+	<canvas class='grid' width='1000',height='400px'>
+		
+	</canvas>
+
+	<div class="arr__controllers">
+		<div>
+			<input type="number" class="arr__peek__input" placeholder="Peek Value" value="0" name="peek">
+			<button class="arr__peek">Search</button>
+		</div>		
+	</div>
+
+	<script>
+
+	</script>
+</body>
+</html>
+
+
+	<script>
+// MAIN
+	arr =[];
+	max = 100;
+	time_delay = 2000;
+	canvas = document.querySelector('canvas');
+	max_width = canvas.width;
+	max_height = canvas.height;
+
+	ctx = canvas.getContext("2d");
+	size = 16;
+	rect = {
+		width: 60,
+		height: 24
+	}
+
+	init();
+	animate();
+
+
+// utility
+	function randomize_an_array() {
+		arr = [];
+		for(let i=0; i<size; i++) {
+			arr.push(Math.floor(Math.random() * max + 1));
+		}
+		arr.sort((a, b) => a-b);
+	}
+
+	function init() {	
+			randomize_an_array();
+			add_listener();
+	}
+
+	function add_listener() {
+		document.querySelector(".arr__peek").addEventListener("click", () => {
+			let key = +document.querySelector(".arr__peek__input").value;
+			document.querySelector(".arr__peek").disabled = true;
+			binary_search(key);
+		})
+	}
+
+	async function binary_search(key) {
+		let low = 0;
+		let high = size - 1;
+		let mid;
+		let found = -1;
+		while(low <= high) {
+			mid = Math.floor((low + high) / 2);
+			if( arr[mid] == key) {
+				found = low = high = mid;
+
+			}
+			else if(key < arr[mid]) {
+				high = mid - 1;
+			}
+			else {
+				low = mid + 1;
+			}
+			await sleep(time_delay).then(() => {
+					animate(low, high, found);	
+			})
+		}
+		alert("not found");
+		window.location.reload();
+	}
+
+
+	function clear(x1=0, y1=0, width=max_width, height=max_height) {
+			ctx.fillStyle = 'lightgreen';
+			ctx.fillRect(x1, y1, width, height)
+	}
+
+	function animate(low=-1, high=(size-1), found=-1) {
+		clear(0, 0, max_width, max_height);
+		arr.forEach((e, i) => {
+			if(i >= low && i <= high) {
+				ctx.fillStyle = "black";	
+			}
+			else {
+				ctx.fillStyle = "lightgreen";	
+			}
+			if(i == found) {
+				ctx.fillStyle = "white";	
+			}
+			ctx.fillRect(i * rect.width + i + 10, max_height/2, rect.width, rect.height);
+			ctx.fillStyle = 'white';
+			ctx.font = 'bold 15px ubuntu'
+			if(i >= low && i <= high) {
+				ctx.fillStyle = "white";	
+			} 
+
+			else {
+				ctx.fillStyle = "lightgreen";	
+			}
+
+			if(found == i) {
+				ctx.font = 'bold 20px ubuntu'
+				ctx.fillStyle = "black";	
+			}
+			ctx.fillText(`${e}`, i * rect.width + i + rect.width/2 + 10, max_height/2 + rect.height * (3/4))
+			ctx.fillStyle = 'black';
+		})
+
+		let p = [];
+		for(let i=0; i<size; i++) {
+			p.push(i);
+		}
+
+		p.forEach((e, i) => {
+			ctx.fillStyle = "red";	
+			ctx.fillRect(i * rect.width + i + 10, max_height/2 + 2 * rect.height, rect.width, rect.height * (3 / 4));
+			ctx.fillStyle = 'yellow';
+			ctx.font = 'bold 15px ubuntu'
+			ctx.fillText(`${e}`, i * rect.width + i + rect.width/2 + 10, max_height/2 + rect.height * (3/4) + (7.5 / 4) * rect.height)
+			ctx.fillStyle = 'black';
+		})
+		ctx.fillStyle = "red";
+		ctx.font = "bolder 15px monospace";
+		ctx.fillText("Array", 10, max_height/2 - 5)
+		ctx.fillStyle = "darkblue";
+		ctx.font = "bolder 15px monospace";
+		ctx.fillText("Index", 10, max_height/2 + 45)	
+	}
+
+
+	function sleep(ms) {
+		return new Promise(resolve => setTimeout(resolve, ms));
+	}
+	</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "DSA-CP-ALgo",
+  "version": "1.0.0",
+  "description": "ADS-Cp-ALGO-SIMULATOR",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "google-chrome index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erenyeager101"
+  },
+  "keywords": [
+    "datastructure",
+    "algorithm"
+  ],
+  "author": "Group-15",
+  "license": "null",
+  "bugs": {
+    "url": "https://github.com/erenyeager101"
+  },
+  "homepage": "https://github.com/erenyeager101"
+}
