@@ -301,18 +301,24 @@
         }
 
         function pop_up() {
-            let popup = document.createElement('div');
-            popup.className = 'popup-backdrop';
-            popup.innerHTML = `
-                <div class="info__box">
-                    <span class="cross" onclick="this.parentElement.parentElement.remove();">X</span>
-                    <h1 class="popup__heading">Welcome to the Multi-Algo-Simulator</h1>
-                    <p>This simulator will help you understand different algorithms.</p>
-                    <p>Click on any algorithm to get started!</p>
-                </div>
-            `;
-            document.body.appendChild(popup);
-        }
+    let popup = document.createElement('div');
+    popup.className = 'popup-backdrop';
+    popup.innerHTML = `
+        <div class="info__box">
+            <span class="cross" onclick="this.parentElement.parentElement.remove();">X</span>
+            <h1 class="popup__heading">Welcome to the Multi-Algo-Simulator</h1>
+            <p>This simulator will help you understand different algorithms.</p>
+            <p>Click on any algorithm to get started!</p>
+        </div>
+    `;
+    document.body.appendChild(popup);
+
+    // Set a timeout to automatically remove the popup after 5 seconds
+    setTimeout(() => {
+        popup.remove();  // Removes the popup element after 5 seconds
+    }, 5000);  // 5000 milliseconds = 5 seconds
+}
+
     </script>
 </body>
 </html>
