@@ -1,5 +1,5 @@
 
-# 🌟 ADS-CP: Multi-Algo-Simulator 🌟
+# 🌟  Multi-Algo-Simulator 🌟
 
 Welcome to **ADS-CP** - your go-to tool for visualizing and simulating various algorithms dynamically in one place! 🚀 This simulator empowers users to explore, understand, and analyze multiple algorithms with ease, offering interactive animations and step-by-step breakdowns.
 
