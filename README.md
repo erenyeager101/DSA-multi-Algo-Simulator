@@ -8,14 +8,17 @@ Welcome to **ADS-CP** - your go-to tool for visualizing and simulating various a
  <!-- <h2 align="center">DSALGO VISUALIZER </h2> -->
 </p>
 
-<img width="100%" src="https://github.com/jhabarsingh/DSALGO-VISUALIZER/blob/main/git_home/gif.gif?raw=true" />
+
 
 ## 🎯 **Core Features**
 
 - 🔄 **Multiple Algorithm Support**: Simulate a variety of data structures and algorithms, such as:
   - 🧩 Sorting Algorithms (Merge Sort, Quick Sort, etc.)
+  - [Bubble Sort](https://dsa-multi-algo-simulator.vercel.app/templates/sort_algorithms/bubble.html)
   - 🔗 Data Structures (Singly Linked Lists, Binary Search Trees)
+  - [Singly Linked List](https://dsa-multi-algo-simulator.vercel.app/templates/linked_list/singly.html)
   - 📊 Searching Algorithms (Linear Search, Binary Search)
+  - [Binary Search](https://dsa-multi-algo-simulator.vercel.app/templates/search_algorithms/binary.html)
 - ⚡ **Interactive Animations**: Watch algorithms come to life with step-by-step visualizations.
 - 🔍 **Deep Insights**: Learn the inner workings of each algorithm through detailed comments and animated flow.
 - 📱 **Responsive Design**: Works on all devices – mobile, tablet, and desktop!
@@ -51,8 +54,8 @@ Welcome to **ADS-CP** - your go-to tool for visualizing and simulating various a
 ## 📸 **Screenshots**
 
 <div align="center">
-  <img src="https://your-screenshot-url-1" width="400px" />
-  <img src="https://your-screenshot-url-2" width="400px" />
+  <img src="https://github.com/erenyeager101/DSA-multi-Algo-Simulator/blob/main/logo/Screenshot%202024-10-20%20043706.png" width="400px" />
+  <img src="https://github.com/erenyeager101/DSA-multi-Algo-Simulator/blob/main/logo/Screenshot%202024-10-20%20043921.png" width="400px" />
 </div>
 
 ---
