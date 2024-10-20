@@ -264,7 +264,17 @@
             },
         ];
 
-        
+        if (!localStorage.getItem("counter")) pop_up();
+
+        // Utility
+        details.forEach((detail, index) => {
+            let temp = window.localStorage.getItem("questions");
+            if (detail.heading == "Questions" && temp == null) {
+                // Do Nothing
+            } else {
+                add_card(detail, index);
+            }
+        });
 
         function add_card(details, index) {
             let card = document.createElement('div');
@@ -293,9 +303,10 @@
             let popup = document.createElement('div');
             popup.className = 'popup-backdrop';
             popup.innerHTML = `
-                <div class="info__box">
+                <div class="card">
                     <span class="cross" onclick="this.parentElement.parentElement.remove();">X</span>
-                    <h1 class="popup__heading">Welcome to the Multi-Algo-Simulator</h1>
+                    <h1 class="popup__heading">Welcome to the Multi-Algo-Simulator</h1><br>
+		    <h3>Developed by group 15 under ADS course</h3>
                     <p>This simulator will help you understand different algorithms.</p>
                     <p>Click on any algorithm to get started!</p>
                 </div>
