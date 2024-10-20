@@ -122,10 +122,9 @@
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light" style="background-color: #0c0c0c;">
 		<a class="navbar-brand" href="#">
-			
-			<img src="logo/Multi-Algo-Sim.png" 
-                style="height:40px;margin-right:10px;"
-            />
+			<img src="https://img.freepik.com/premium-vector/dsa-logo-dsa-letter-dsa-letter-logo-design-initials-dsa-logo-linked-with-circle-uppercase-monogram-logo-dsa-typography-technology-business-real-estate-brand_229120-63844.jpg" 
+				 style="height: 40px;" 
+				 alt="Logo" />
 			Home
 		</a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -149,7 +148,7 @@
 	
     <div id='main'>
         <div class="main__heading">
-            <img src="logo/Multi-Algo-Sim.png" 
+            <img src="https://img.freepik.com/premium-vector/dsa-logo-dsa-letter-dsa-letter-logo-design-initials-dsa-logo-linked-with-circle-uppercase-monogram-logo-dsa-typography-technology-business-real-estate-brand_229120-63844.jpg" 
                 style="height:40px;margin-right:10px;"
             />
             <b class='heading__text title'>ADS-CP</b> &nbsp;&nbsp; <span>Multi-Algo-Simulator</span>
@@ -258,10 +257,10 @@
                 sub_topics: ["bubble", "selection", "insertion", "merge", "quick"],
             },
             {
-                heading: 'Questions',
+                heading: 'Time Complexity Analysis',
                 image: 'images/question.jpeg',
-                link: 'templates/questions.html',
-                sub_topics: ["Data Structure", "Algorithm"],
+                link: 'templates/TC.html',
+                sub_topics: ["Data Structure", "Time Complexity"],
             },
         ];
 
@@ -280,7 +279,7 @@
         function add_card(details, index) {
             let card = document.createElement('div');
             card.classList.add('col', 'col-12', 'col-md-6', 'col-lg-4');
-            let card_html = 
+            let card_html = `
                 <div class="card">
                     <div class="card__heading">${details.heading}</div>
                     <a href="${details.link}" target="_self" class="card-img-top-parent">
@@ -288,7 +287,7 @@
                     </a>
                     <div class="card-body"></div>
                 </div>
-            ;
+            `;
             card.innerHTML = card_html;
             sec.appendChild(card);
             details.sub_topics.forEach((topic) => {
@@ -300,25 +299,19 @@
             });
         }
 
-        function pop_up() {
-    let popup = document.createElement('div');
-    popup.className = 'popup-backdrop';
-    popup.innerHTML = 
-        <div class="info__box">
-            <span class="cross" onclick="this.parentElement.parentElement.remove();">X</span>
-            <h1 class="popup__heading">Welcome to the Multi-Algo-Simulator</h1>
-            <p>This simulator will help you understand different algorithms.</p>
-            <p>Click on any algorithm to get started!</p>
-        </div>
-    ;
-    document.body.appendChild(popup);
-
-    // Set a timeout to automatically remove the popup after 5 seconds
-    setTimeout(() => {
-        popup.remove();  // Removes the popup element after 5 seconds
-    }, 5000);  // 5000 milliseconds = 5 seconds
-}
-
+        // function pop_up() {
+        //     let popup = document.createElement('div');
+        //     popup.className = 'popup-backdrop';
+        //     popup.innerHTML = `
+        //         <div class="info__box">
+        //             <span class="cross" onclick="this.parentElement.parentElement.remove();">X</span>
+        //             <h1 class="popup__heading">Welcome to the Multi-Algo-Simulator</h1>
+        //             <p>This simulator will help you understand different algorithms.</p>
+        //             <p>Click on any algorithm to get started!</p>
+        //         </div>
+        //     `;
+        //     document.body.appendChild(popup);
+        // }
     </script>
 </body>
 </html>
