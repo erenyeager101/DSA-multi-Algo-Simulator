@@ -117,6 +117,52 @@
             background: rgba(0, 0, 0, 0.7);
             z-index: 10;
         }
+	 .popup-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+        }
+
+        /* Card styling */
+        .card-popup {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 400px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+        }
+
+        /* Close button */
+        .cross {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 18px;
+            background-color: #f44336; /* Red color */
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 50%;
+        }
+
+        .popup__head {
+            font-size: 22px;
+            color: #333;
+        }
+
+        p-popup {
+            color: #555;
+        }
     </style>
 </head>
 <body>
@@ -299,19 +345,24 @@
             });
         }
 
-        function pop_up() {
+       function pop_up() {
             let popup = document.createElement('div');
             popup.className = 'popup-backdrop';
             popup.innerHTML = `
-                <div class="card">
+                <div class="card-popup">
                     <span class="cross" onclick="this.parentElement.parentElement.remove();">X</span>
-                    <h1 class="popup__heading">Welcome to the Multi-Algo-Simulator</h1><br>
-		    <h3>Developed by group 15 under ADS course</h3>
-                    <p>This simulator will help you understand different algorithms.</p>
-                    <p>Click on any algorithm to get started!</p>
+                    <h1 class="popup__head">Welcome to the Multi-Algo-Simulator</h1><br>
+                    <h3>Developed by group 15 under ADS course</h3>
+                    <p class="p-popup">This simulator will help you understand different algorithms.</p>
+                    <p class="p-popup">Click on any algorithm to get started!</p>
                 </div>
             `;
             document.body.appendChild(popup);
+
+            // Remove the pop-up after 5 seconds
+            setTimeout(() => {
+                popup.remove();
+            }, 5000);
         }
     </script>
 </body>
