@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Time Complexity Visualizer</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+         h2, h3 {
+            color: #878686;
+        }
+        h1{
+            color:#ddd
+        }
+
+        a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        /* Header Section */
+        header {
+            background-color: #333;
+            color: rgb(84, 80, 80);
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        /* Main Content */
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        /* Algorithm Section */
+        .algorithm-section {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .algorithm-section img {
+            max-width: 150px;
+            margin-right: 20px;
+            border-radius: 8px;
+        }
+
+        .algorithm-section-content {
+            flex: 1;
+        }
+
+        .algorithm-section h3 {
+            margin-top: 0;
+        }
+
+        .complexity-table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+
+        .complexity-table th, .complexity-table td {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+        }
+
+        .complexity-table th {
+            background-color: #333;
+            color: white;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header>
+        <h1>DSA Time Complexity Visualizer</h1>
+        <p>Explore the time complexities of various Data Structures and Algorithms</p>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Sorting Algorithms Section -->
+        <div class="algorithm-section">
+            <img src="https://via.placeholder.com/150" alt="Sorting Algorithms">
+            <div class="algorithm-section-content">
+                <h3>Sorting Algorithms</h3>
+                <p>Sorting algorithms are used to rearrange the elements of a list in a specific order, typically in ascending or descending order.</p>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Best Case</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bubble Sort</td>
+                            <td>O(n)</td>
+                            <td>O(n<sup>2</sup>)</td>
+                            <td>O(n<sup>2</sup>)</td>
+                        </tr>
+                        <tr>
+                            <td>Merge Sort</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                        </tr>
+                        <tr>
+                            <td>Quick Sort</td>
+                            <td>O(n log n)</td>
+                            <td>O(n log n)</td>
+                            <td>O(n<sup>2</sup>)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Searching Algorithms Section -->
+        <div class="algorithm-section">
+            <img src="https://via.placeholder.com/150" alt="Searching Algorithms">
+            <div class="algorithm-section-content">
+                <h3>Searching Algorithms</h3>
+                <p>Searching algorithms are designed to retrieve information stored within a data structure.</p>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Best Case</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Linear Search</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Binary Search</td>
+                            <td>O(1)</td>
+                            <td>O(log n)</td>
+                            <td>O(log n)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Graph Algorithms Section -->
+        <div class="algorithm-section">
+            <img src="https://via.placeholder.com/150" alt="Graph Algorithms">
+            <div class="algorithm-section-content">
+                <h3>Graph Algorithms</h3>
+                <p>Graph algorithms are used to handle problems that can be represented by a set of vertices and edges.</p>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Algorithm</th>
+                            <th>Best Case</th>
+                            <th>Average Case</th>
+                            <th>Worst Case</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Depth-First Search (DFS)</td>
+                            <td>O(V + E)</td>
+                            <td>O(V + E)</td>
+                            <td>O(V + E)</td>
+                        </tr>
+                        <tr>
+                            <td>Breadth-First Search (BFS)</td>
+                            <td>O(V + E)</td>
+                            <td>O(V + E)</td>
+                            <td>O(V + E)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Dynamic Programming Section -->
+        <div class="algorithm-section">
+            <img src="https://via.placeholder.com/150" alt="Dynamic Programming">
+            <div class="algorithm-section-content">
+                <h3>Data Structures</h3>
+                <p>The average time complexity of different data structures for different operations</p>
+                <table class="complexity-table">
+                    <thead>
+                        <tr>
+                            <th>Data Structures</th>
+                            <th>Insertion</th>
+                            <th>Deletion</th>
+                            <th>Traversal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Linked Lists</td>
+                            <td>O(1)</td>
+                            <td>O(1)</td>
+                            <td>O(n)</td>
+                        </tr>
+                        <tr>
+                            <td>Binary Search Trees</td>
+                            <td>O(logn)</td>
+                            <td>O(logn)</td>
+                            <td>O(logn)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p> Group 15 | DSA-Multi-Algo-Sim</p>
+    </footer>
+
+</body>
+</html>
