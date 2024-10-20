@@ -264,17 +264,7 @@
             },
         ];
 
-        if (!localStorage.getItem("counter")) pop_up();
-
-        // Utility
-        details.forEach((detail, index) => {
-            let temp = window.localStorage.getItem("questions");
-            if (detail.heading == "Questions" && temp == null) {
-                // Do Nothing
-            } else {
-                add_card(detail, index);
-            }
-        });
+        
 
         function add_card(details, index) {
             let card = document.createElement('div');
