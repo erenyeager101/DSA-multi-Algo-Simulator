@@ -87,11 +87,8 @@
 			<option value="2">Selection Sort</option>
 			<option value="3">Insertions Sort</option>
 			<option value="4">Merge Sort</option>
-			<option value="5">Quick Sort</option>
-			<option value="6">Radix Sort</option>
-			<option value="7">Shell Sort</option>
-			<option value="8">Counting Sort</option>
-			<option value="9">Heap Sort</option>
+			
+			
 		</select>
 	</div>
 	<div class='grid'></div>
@@ -118,14 +115,7 @@
 		let arr = [];
 
 		let waste = [
-			{
-				name: 'radix sort',
-				link: `radix.html`
-			},
-			{
-				name: 'shell sort',
-				link: `shell.html`
-			}
+			
 		]
 		let size = 20;
 		let max = 100;
@@ -213,21 +203,7 @@
 				case 4: document.querySelector('.heading').innerText = 'Merge Sort';
 						merge_sort();
 						break;
-				case 5: document.querySelector('.heading').innerText = 'Quick Sort';
-						quick_sort();
-						break;
-				case 6: document.querySelector('.heading').innerText = 'Radix Sort';
-						radix_sort();
-						break;
-				case 7: document.querySelector('.heading').innerText = 'Shell Sort';
-						shell_sort();
-						break;
-				case 8: document.querySelector('.heading').innerText = 'Counting Sort';
-						counting_sort();
-						break;
-				case 9: document.querySelector('.heading').innerText = 'Heap Sort';
-						heap_sort();
-						break;
+				
 				default: merge_sort();
 			}
 		}
@@ -292,26 +268,7 @@
 
 		}
 
-		function quick_sort() {
-
-		}
-
-		function radix_sort() {
-
-		}
-
-		function shell_sort() {
-
-		}
-
-		function counting_sort() {
-
-		}
-
-		function heap_sort() {
-
-		}
-
+		
 
 
 		// Sort options 
