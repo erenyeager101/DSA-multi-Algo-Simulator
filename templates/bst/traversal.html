@@ -137,26 +137,37 @@
 	}
 
 	async function preorderfun(root) {
-		if(typeof(root) == "undefined" || root.value == "") {
-			return;
-		}
-		await preorderfun(root.pre);
-		await preorderfun(root.next);
-		await sleep(time_delay).then(() => {
-			temp_animation(root.xx, root.yy, root.value);
-		})
-	}
+    // Check if the root is undefined or has an empty value
+    if (typeof(root) == "undefined" || root.value == "") {
+        return;
+    }
+    
+    // Process the current node first (pre-order)
+    await sleep(time_delay).then(() => {
+        temp_animation(root.xx, root.yy, root.value);
+    });
+
+    // Then recursively traverse the left (pre) and right (next) subtrees
+    await preorderfun(root.pre);
+    await preorderfun(root.next);
+}
+
 
 	async function postorderfun(root) {
-		if(typeof(root) == "undefined" || root.value == "") {
-			return;
-		}
-		await sleep(time_delay).then(() => {
-			temp_animation(root.xx, root.yy, root.value);
-		})
-		await postorderfun(root.pre);
-		await postorderfun(root.next);
-	}
+    if (typeof(root) == "undefined" || root.value == "") {
+        return;
+    }
+
+    // First, recursively traverse the left (pre) and right (next) subtrees
+    await postorderfun(root.pre);
+    await postorderfun(root.next);
+
+    // Then process the current node (post-order)
+    await sleep(time_delay).then(() => {
+        temp_animation(root.xx, root.yy, root.value);
+    });
+}
+
 
 	function add_listeners() {
 		for(let i=0; i<arr.length; i++) {
