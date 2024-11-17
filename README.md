@@ -89,10 +89,3 @@ A group project developed by -
 
 ---
 
-## ⚖️ **License**
-
-This project is licensed under the MIT License. See the [LICENSE](./LICENSE) file for more details.
-
----
-
-Made with 💻 by the **ADS-CP** Team
