@@ -1,7 +1,7 @@
 
 # 🌟  Multi-Algo-Simulator 🌟
 
-Welcome to **DSA-multi-Algo-Simulator** - your go-to tool for visualizing and simulating various algorithms dynamically in one place! 🚀 This simulator empowers users to explore, understand, and analyze multiple algorithms with ease, offering interactive animations and step-by-step breakdows.This project aims to help upcoming student who face difficulties in visualizing and understanding the key concepts of DSA and struggle to understand the basics , this can be 
+Welcome to **DSA-multi-Algo-Simulator** - your go-to tool for visualizing and simulating various algorithms dynamically in one place! 🚀 This simulator empowers users to explore, understand, and analyze multiple algorithms with ease, offering interactive animations and step-by-step breakdows.This project aims to help upcoming student who face difficulties in visualizing and understanding the key concepts of DSA and struggle to understand the basics , this can be go-through solution for them to visualize and learn!
 
 <p align="center">
  <img style="margin:auto" width="300" src="https://github.com/erenyeager101/DSA-multi-Algo-Simulator/blob/main/logo/Multi-Algo-Sim.png?raw=true" />
