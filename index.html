@@ -316,7 +316,7 @@
             }
         ];
 
-        if (!localStorage.getItem("counter")) pop_up();
+       
 
         // Utility
         details.forEach((detail, index) => {
@@ -351,25 +351,7 @@
             });
         }
 
-       function pop_up() {
-            let popup = document.createElement('div');
-            popup.className = 'popup-backdrop';
-            popup.innerHTML = `
-                <div class="card-popup">
-                    <span class="cross" onclick="this.parentElement.parentElement.remove();">X</span>
-                    <h1 class="popup__head">Welcome to the Multi-Algo-Simulator</h1><br>
-                    <h3>Developed by group 15 under ADS course</h3>
-                    <p class="p-popup">This simulator will help you understand different algorithms.</p>
-                    <p class="p-popup">Click on any algorithm to get started!</p>
-                </div>
-            `;
-            document.body.appendChild(popup);
-
-            // Remove the pop-up after 5 seconds
-            setTimeout(() => {
-                popup.remove();
-            }, 5000);
-        }
+       
     </script>
 </body>
 </html>
