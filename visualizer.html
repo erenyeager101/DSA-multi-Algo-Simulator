@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoVisualizer - Industry Ready</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #6b7280;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 border-b border-gray-700 h-16 flex items-center justify-between px-6 shadow-md z-10">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center font-bold text-white">AV</div>
+            <h1 class="text-xl font-bold tracking-wide">AlgoVisualizer</h1>
+        </div>
+        <div class="flex items-center gap-4">
+            <a href="index.html" class="text-gray-400 hover:text-white transition-colors text-sm">Home</a>
+            <a href="https://github.com/erenyeager101" target="_blank" class="text-gray-400 hover:text-white transition-colors">
+                <i class="fab fa-github text-xl"></i>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex flex-1 overflow-hidden">
+
+        <!-- Sidebar: Controls & Config -->
+        <aside class="w-80 bg-gray-800 border-r border-gray-700 flex flex-col shadow-lg z-10">
+            <div class="p-6 border-b border-gray-700">
+                <h2 class="text-sm uppercase text-gray-400 font-semibold mb-4">Configuration</h2>
+
+                <!-- Algorithm Select -->
+                <div class="mb-5">
+                    <label class="block text-xs text-gray-500 mb-1">Algorithm</label>
+                    <select id="algorithm-select" class="w-full bg-gray-700 text-white border border-gray-600 rounded px-3 py-2 focus:outline-none focus:border-blue-500 transition-colors">
+                        <option value="bubble">Bubble Sort</option>
+                        <!-- Future options: Selection, Insertion, Merge, Quick -->
+                    </select>
+                </div>
+
+                <!-- Input Size -->
+                <div class="mb-5">
+                    <div class="flex justify-between mb-1">
+                        <label class="block text-xs text-gray-500">Array Size</label>
+                        <span id="size-value" class="text-xs text-blue-400 font-mono">30</span>
+                    </div>
+                    <input type="range" id="size-slider" min="5" max="100" value="30" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                </div>
+
+                <!-- Speed -->
+                <div class="mb-5">
+                    <div class="flex justify-between mb-1">
+                        <label class="block text-xs text-gray-500">Speed</label>
+                        <span id="speed-value" class="text-xs text-blue-400 font-mono">1x</span>
+                    </div>
+                    <input type="range" id="speed-slider" min="1" max="100" value="50" class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-green-500">
+                </div>
+
+                <!-- Buttons -->
+                <div class="grid grid-cols-2 gap-3">
+                    <button id="randomize-btn" class="col-span-2 bg-gray-700 hover:bg-gray-600 text-white py-2 rounded transition-colors text-sm font-medium border border-gray-600">
+                        <i class="fas fa-random mr-2"></i>Randomize
+                    </button>
+                    <button id="start-btn" class="bg-blue-600 hover:bg-blue-500 text-white py-2 rounded transition-colors text-sm font-medium shadow-lg shadow-blue-500/30">
+                        <i class="fas fa-play mr-2"></i>Run
+                    </button>
+                    <button id="reset-btn" class="bg-red-600 hover:bg-red-500 text-white py-2 rounded transition-colors text-sm font-medium shadow-lg shadow-red-500/30">
+                        <i class="fas fa-undo mr-2"></i>Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats Panel -->
+            <div class="p-6 flex-1 overflow-y-auto">
+                <h2 class="text-sm uppercase text-gray-400 font-semibold mb-4">Live Statistics</h2>
+                <div class="space-y-3">
+                    <div class="bg-gray-700/50 p-3 rounded border border-gray-600">
+                        <div class="text-xs text-gray-400 mb-1">Comparisons</div>
+                        <div id="stats-comparisons" class="text-xl font-mono font-bold text-yellow-400">0</div>
+                    </div>
+                    <div class="bg-gray-700/50 p-3 rounded border border-gray-600">
+                        <div class="text-xs text-gray-400 mb-1">Swaps</div>
+                        <div id="stats-swaps" class="text-xl font-mono font-bold text-red-400">0</div>
+                    </div>
+                    <div class="bg-gray-700/50 p-3 rounded border border-gray-600">
+                        <div class="text-xs text-gray-400 mb-1">Current State</div>
+                        <div id="stats-state" class="text-sm text-gray-200">Idle</div>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                     <h2 class="text-sm uppercase text-gray-400 font-semibold mb-2">Complexity</h2>
+                     <div class="text-xs text-gray-300">
+                         <div class="flex justify-between py-1 border-b border-gray-700">
+                             <span>Time (Worst)</span>
+                             <span id="comp-time-worst" class="font-mono text-red-300">-</span>
+                         </div>
+                         <div class="flex justify-between py-1 border-b border-gray-700">
+                             <span>Time (Avg)</span>
+                             <span id="comp-time-avg" class="font-mono text-yellow-300">-</span>
+                         </div>
+                         <div class="flex justify-between py-1">
+                             <span>Space</span>
+                             <span id="comp-space" class="font-mono text-green-300">-</span>
+                         </div>
+                     </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Visualization Area -->
+        <main class="flex-1 flex flex-col relative bg-gray-900">
+            <!-- Canvas Container -->
+            <div class="flex-1 flex items-center justify-center p-4 relative" id="canvas-container">
+                <canvas id="visualizer-canvas" class="shadow-2xl rounded bg-gray-800 border border-gray-700"></canvas>
+            </div>
+
+            <!-- Playback Controls (Floating or Bottom) -->
+            <div class="h-16 bg-gray-800 border-t border-gray-700 flex items-center justify-center gap-4 px-6 z-10">
+                <button id="prev-step-btn" class="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors text-gray-300" title="Previous Step">
+                    <i class="fas fa-step-backward"></i>
+                </button>
+                <button id="play-pause-btn" class="w-12 h-12 rounded-full bg-blue-600 hover:bg-blue-500 flex items-center justify-center transition-colors text-white shadow-lg shadow-blue-500/30" title="Play/Pause">
+                    <i class="fas fa-play"></i>
+                </button>
+                <button id="next-step-btn" class="w-10 h-10 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center transition-colors text-gray-300" title="Next Step">
+                    <i class="fas fa-step-forward"></i>
+                </button>
+
+                <div class="ml-4 w-64">
+                    <label class="block text-xs text-gray-500 mb-1">Progress</label>
+                    <input type="range" id="progress-slider" min="0" max="100" value="0" class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500" disabled>
+                </div>
+            </div>
+
+            <!-- Code/Description Panel (Collapsible or Overlay) -->
+            <div id="code-panel" class="absolute top-4 right-4 w-80 bg-gray-800/90 backdrop-blur-sm border border-gray-600 rounded shadow-2xl p-4 transition-transform transform translate-x-full md:translate-x-0">
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="font-bold text-sm text-gray-200">Algorithm Details</h3>
+                    <button id="toggle-code-btn" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                <div class="text-xs font-mono bg-gray-900 p-2 rounded text-green-400 overflow-x-auto border border-gray-700" id="code-display">
+                    // Algorithm code will appear here
+                    function sort(arr) { ... }
+                </div>
+                <p id="algo-desc" class="mt-3 text-xs text-gray-400 leading-relaxed">
+                    Select an algorithm to view its details.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <script type="module">
+        import Controller from './src/controller/Controller.js';
+        new Controller();
+    </script>
+</body>
+</html>
