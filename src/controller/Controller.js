@@ -1,5 +1,10 @@
 import BubbleSort from '../algorithms/BubbleSort.js';
+import SelectionSort from '../algorithms/SelectionSort.js';
+import InsertionSort from '../algorithms/InsertionSort.js';
+import MergeSort from '../algorithms/MergeSort.js';
+import QuickSort from '../algorithms/QuickSort.js';
 import SortVisualizer from '../visualizer/SortVisualizer.js';
+import ComplexityAnalyzer from '../analyzer/ComplexityAnalyzer.js';
 
 class Controller {
     constructor() {
@@ -12,6 +17,7 @@ class Controller {
         this.trace = [];
         this.algorithm = new BubbleSort(); // Default
         this.visualizer = new SortVisualizer(document.getElementById('visualizer-canvas'));
+        this.analyzer = new ComplexityAnalyzer('analyzer-canvas');
         this.timer = null;
 
         // DOM Elements
@@ -38,6 +44,17 @@ class Controller {
             algoDesc: document.getElementById('algo-desc'),
             toggleCodeBtn: document.getElementById('toggle-code-btn'),
             codePanel: document.getElementById('code-panel'),
+            // Tabs
+            tabVisualizer: document.getElementById('tab-visualizer'),
+            tabAnalyzer: document.getElementById('tab-analyzer'),
+            tabTheory: document.getElementById('tab-theory'),
+            viewVisualizer: document.getElementById('view-visualizer'),
+            viewAnalyzer: document.getElementById('view-analyzer'),
+            viewTheory: document.getElementById('view-theory'),
+            // Analyzer
+            analyzeBtn: document.getElementById('analyze-btn'),
+            analyzerCode: document.getElementById('analyzer-code'),
+            predictedComplexity: document.getElementById('predicted-complexity'),
         };
 
         this.init();
@@ -69,10 +86,14 @@ class Controller {
         // Algorithm Select
         this.elements.algoSelect.addEventListener('change', (e) => {
             const algoName = e.target.value;
-            if (algoName === 'bubble') {
-                this.algorithm = new BubbleSort();
+            switch(algoName) {
+                case 'bubble': this.algorithm = new BubbleSort(); break;
+                case 'selection': this.algorithm = new SelectionSort(); break;
+                case 'insertion': this.algorithm = new InsertionSort(); break;
+                case 'merge': this.algorithm = new MergeSort(); break;
+                case 'quick': this.algorithm = new QuickSort(); break;
+                default: this.algorithm = new BubbleSort();
             }
-            // Add other algos here
             this.updateAlgorithmInfo();
             this.reset();
         });
@@ -123,6 +144,59 @@ class Controller {
              this.elements.codePanel.classList.toggle('translate-x-full');
              this.elements.codePanel.classList.toggle('md:translate-x-full');
              this.elements.codePanel.classList.toggle('md:translate-x-0');
+        });
+
+        // Tabs Logic
+        const switchTab = (tab) => {
+            // Hide all
+            this.elements.viewVisualizer.classList.add('hidden');
+            this.elements.viewAnalyzer.classList.add('hidden');
+            this.elements.viewTheory.classList.add('hidden');
+            // Reset styles
+            [this.elements.tabVisualizer, this.elements.tabAnalyzer, this.elements.tabTheory].forEach(t => {
+                t.classList.remove('text-blue-400', 'border-b-2', 'border-blue-400');
+                t.classList.add('text-gray-400');
+            });
+
+            // Show selected
+            if (tab === 'visualizer') {
+                this.elements.viewVisualizer.classList.remove('hidden');
+                this.elements.viewVisualizer.classList.add('flex'); // Maintain flex layout
+                this.elements.tabVisualizer.classList.add('text-blue-400', 'border-b-2', 'border-blue-400');
+                this.elements.tabVisualizer.classList.remove('text-gray-400');
+            } else if (tab === 'analyzer') {
+                this.elements.viewAnalyzer.classList.remove('hidden');
+                this.elements.viewAnalyzer.classList.add('flex');
+                this.elements.tabAnalyzer.classList.add('text-blue-400', 'border-b-2', 'border-blue-400');
+                this.elements.tabAnalyzer.classList.remove('text-gray-400');
+            } else if (tab === 'theory') {
+                this.elements.viewTheory.classList.remove('hidden');
+                this.elements.tabTheory.classList.add('text-blue-400', 'border-b-2', 'border-blue-400');
+                this.elements.tabTheory.classList.remove('text-gray-400');
+            }
+        };
+
+        this.elements.tabVisualizer.addEventListener('click', () => switchTab('visualizer'));
+        this.elements.tabAnalyzer.addEventListener('click', () => switchTab('analyzer'));
+        this.elements.tabTheory.addEventListener('click', () => switchTab('theory'));
+
+        // Analyzer Logic
+        this.elements.analyzeBtn.addEventListener('click', async () => {
+            const code = this.elements.analyzerCode.value;
+            this.elements.analyzeBtn.disabled = true;
+            this.elements.analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing...';
+
+            try {
+                // Allow UI update
+                await new Promise(r => setTimeout(r, 100));
+                const complexity = await this.analyzer.analyze(code);
+                this.elements.predictedComplexity.textContent = `Prediction: ${complexity}`;
+            } catch (error) {
+                console.error(error);
+            } finally {
+                this.elements.analyzeBtn.disabled = false;
+                this.elements.analyzeBtn.innerHTML = '<i class="fas fa-chart-line mr-2"></i>Analyze Complexity';
+            }
         });
     }
 
