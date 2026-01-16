@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoVisualizer - Analyzer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+    <!-- Navbar injected by Navbar.js -->
+
+    <div class="flex flex-1 overflow-hidden flex-col md:flex-row p-6 gap-6">
+        <div class="w-full md:w-1/3 flex flex-col">
+            <h2 class="text-xl font-bold mb-4 text-blue-400">Custom Algorithm Analyzer</h2>
+            <p class="text-sm text-gray-400 mb-4">Paste your JavaScript algorithm below. The function should accept an array <code class="text-yellow-400">arr</code> or a number <code class="text-yellow-400">n</code>.</p>
+            <textarea id="analyzer-code" class="flex-1 bg-gray-800 text-gray-200 p-4 font-mono text-sm border border-gray-700 rounded focus:border-blue-500 focus:outline-none resize-none" spellcheck="false">
+// Example: Linear Search (O(n))
+// accepts an array 'arr'
+for(let i=0; i<arr.length; i++) {
+  if(arr[i] === -1) return i;
+}
+</textarea>
+            <div class="flex gap-2 mt-4">
+                 <button id="analyze-btn" class="flex-1 bg-green-600 hover:bg-green-500 text-white py-3 rounded font-bold shadow-lg shadow-green-500/30 transition-all">
+                    <i class="fas fa-chart-line mr-2"></i>Analyze
+                </button>
+                <button id="ai-optimize-btn" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded font-bold shadow-lg shadow-purple-500/30 transition-all">
+                    <i class="fas fa-magic mr-2"></i>AI Optimize
+                </button>
+            </div>
+        </div>
+
+        <div class="w-full md:w-2/3 flex flex-col gap-4">
+             <div class="bg-gray-800 rounded border border-gray-700 p-4 flex flex-col flex-1">
+                <div class="flex justify-between items-center mb-4">
+                     <h3 class="font-bold text-gray-300">Performance Graph</h3>
+                     <span id="predicted-complexity" class="text-sm px-3 py-1 bg-gray-700 rounded text-blue-300 font-mono">Prediction: Ready</span>
+                </div>
+                <div class="flex-1 relative w-full h-full min-h-[300px]">
+                    <canvas id="analyzer-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- AI Suggestions Panel -->
+            <div id="ai-suggestions" class="bg-gray-800 rounded border border-gray-700 p-4 hidden">
+                 <h3 class="font-bold text-purple-400 mb-2"><i class="fas fa-lightbulb mr-2"></i>AI Suggestions</h3>
+                 <div id="ai-suggestions-content" class="text-sm text-gray-300 font-mono whitespace-pre-wrap max-h-40 overflow-y-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import Navbar from './src/components/Navbar.js';
+        import AnalyzerController from './src/controller/AnalyzerController.js';
+        new Navbar();
+        new AnalyzerController();
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoVisualizer - Theory</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+    <!-- Navbar injected by Navbar.js -->
+
+    <div class="flex-1 overflow-y-auto p-8 max-w-5xl mx-auto w-full">
+        <h1 class="text-3xl font-bold mb-8 text-blue-500">Algorithm Analysis & Notations</h1>
+
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Asymptotic Notations</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-800 p-6 rounded border border-gray-700 hover:border-yellow-400 transition-colors">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-2">Big O (O)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents the <strong class="text-white">upper bound</strong> of the running time. It gives the worst-case complexity.</p>
+                    <code class="block bg-gray-900 p-2 rounded text-green-400 text-xs mb-2">f(n) = O(g(n)) iff ∃ c, n₀ > 0 s.t. 0 ≤ f(n) ≤ c⋅g(n) ∀ n ≥ n₀</code>
+                    <p class="text-xs text-gray-400">Example: Linear Search is O(n).</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded border border-gray-700 hover:border-red-400 transition-colors">
+                    <h3 class="text-xl font-bold text-red-400 mb-2">Big Omega (Ω)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents the <strong class="text-white">lower bound</strong> of the running time. It gives the best-case complexity.</p>
+                    <code class="block bg-gray-900 p-2 rounded text-green-400 text-xs mb-2">f(n) = Ω(g(n)) iff ∃ c, n₀ > 0 s.t. 0 ≤ c⋅g(n) ≤ f(n) ∀ n ≥ n₀</code>
+                </div>
+                <div class="bg-gray-800 p-6 rounded border border-gray-700 hover:border-blue-400 transition-colors">
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Theta (Θ)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents the <strong class="text-white">tight bound</strong>. The function grows precisely at the rate of g(n).</p>
+                    <code class="block bg-gray-900 p-2 rounded text-green-400 text-xs mb-2">f(n) = Θ(g(n)) iff ∃ c₁, c₂, n₀ > 0 s.t. c₁⋅g(n) ≤ f(n) ≤ c₂⋅g(n)</code>
+                </div>
+                <div class="bg-gray-800 p-6 rounded border border-gray-700 hover:border-purple-400 transition-colors">
+                    <h3 class="text-xl font-bold text-purple-400 mb-2">Little o (o)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents an upper bound that is <strong class="text-white">not tight</strong>. f(n) becomes insignificant relative to g(n) as n → ∞.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Complexity Examples</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-800 p-4 rounded border border-gray-700">
+                    <h3 class="font-bold text-white">Space Complexity: Matrix Multiplication</h3>
+                    <p class="text-sm text-gray-300 mt-1">To store three N×N matrices (A, B, and Result), the space required is <span class="font-mono text-yellow-300">3 × N²</span>, which is <span class="font-mono text-yellow-300">O(N²)</span>.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded border border-gray-700">
+                    <h3 class="font-bold text-white">Space Complexity: Factorial</h3>
+                    <p class="text-sm text-gray-300 mt-1">
+                        <strong class="text-green-400">Iterative:</strong> Uses a single variable. Complexity: <span class="font-mono text-green-400">O(1)</span>.<br>
+                        <strong class="text-red-400">Recursive:</strong> Uses N stack frames. Complexity: <span class="font-mono text-red-400">O(N)</span>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Advanced Topics</h2>
+            <div class="bg-gray-800 p-6 rounded border border-gray-700 text-sm text-gray-300 leading-relaxed">
+                <h3 class="text-lg font-bold text-white mb-2">Fractional Knapsack (Greedy)</h3>
+                <p class="mb-2">Given items with weights and values, maximize total value in a knapsack of capacity W. We can take fractions of items.</p>
+                <p class="mb-2 text-blue-300">Strategy: Calculate Value/Weight ratio for all items. Sort descending. Take as much as possible from the highest ratio item until full.</p>
+                <p>Time Complexity: <strong>O(N log N)</strong> (due to sorting).</p>
+
+                <h3 class="text-lg font-bold text-white mt-4 mb-2">Minimum Spanning Tree (MST)</h3>
+                <p class="mb-2">Find a subset of edges connecting all vertices in a weighted graph with minimum total weight, without cycles.</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Prim's Algorithm:</strong> Grow MST from a start node. Always add cheapest edge connecting tree to a non-tree node. <em>O(E + V log V)</em>.</li>
+                    <li><strong>Kruskal's Algorithm:</strong> Sort all edges. Add cheapest edge if it doesn't form a cycle (using Union-Find). <em>O(E log E)</em>.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <script type="module">
+        import Navbar from './src/components/Navbar.js';
+        new Navbar();
+    </script>
+</body>
+</html>
