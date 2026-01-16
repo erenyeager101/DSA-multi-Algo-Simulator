@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="style.css">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Chart.js for Analyzer -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Custom Scrollbar */
         ::-webkit-scrollbar {
@@ -43,10 +45,18 @@
     </nav>
 
     <!-- Main Content -->
-    <div class="flex flex-1 overflow-hidden">
 
+    <!-- Tabs Navigation -->
+    <div class="flex justify-center bg-gray-800 border-b border-gray-700">
+        <button id="tab-visualizer" class="px-6 py-3 text-sm font-medium text-blue-400 border-b-2 border-blue-400 focus:outline-none transition-colors">Visualizer</button>
+        <button id="tab-analyzer" class="px-6 py-3 text-sm font-medium text-gray-400 hover:text-white focus:outline-none transition-colors">Analyzer</button>
+        <button id="tab-theory" class="px-6 py-3 text-sm font-medium text-gray-400 hover:text-white focus:outline-none transition-colors">Theory</button>
+    </div>
+
+    <!-- Tab Content: Visualizer -->
+    <div id="view-visualizer" class="flex flex-1 overflow-hidden">
         <!-- Sidebar: Controls & Config -->
-        <aside class="w-80 bg-gray-800 border-r border-gray-700 flex flex-col shadow-lg z-10">
+        <aside class="w-80 bg-gray-800 border-r border-gray-700 flex flex-col shadow-lg z-10 overflow-y-auto">
             <div class="p-6 border-b border-gray-700">
                 <h2 class="text-sm uppercase text-gray-400 font-semibold mb-4">Configuration</h2>
 
@@ -55,7 +65,10 @@
                     <label class="block text-xs text-gray-500 mb-1">Algorithm</label>
                     <select id="algorithm-select" class="w-full bg-gray-700 text-white border border-gray-600 rounded px-3 py-2 focus:outline-none focus:border-blue-500 transition-colors">
                         <option value="bubble">Bubble Sort</option>
-                        <!-- Future options: Selection, Insertion, Merge, Quick -->
+                        <option value="selection">Selection Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                        <option value="merge">Merge Sort</option>
+                        <option value="quick">Quick Sort</option>
                     </select>
                 </div>
 
@@ -92,7 +105,7 @@
             </div>
 
             <!-- Stats Panel -->
-            <div class="p-6 flex-1 overflow-y-auto">
+            <div class="p-6 flex-1">
                 <h2 class="text-sm uppercase text-gray-400 font-semibold mb-4">Live Statistics</h2>
                 <div class="space-y-3">
                     <div class="bg-gray-700/50 p-3 rounded border border-gray-600">
@@ -162,15 +175,106 @@
                         <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
-                <div class="text-xs font-mono bg-gray-900 p-2 rounded text-green-400 overflow-x-auto border border-gray-700" id="code-display">
+                <div class="text-xs font-mono bg-gray-900 p-2 rounded text-green-400 overflow-x-auto border border-gray-700 whitespace-pre" id="code-display">
                     // Algorithm code will appear here
-                    function sort(arr) { ... }
                 </div>
                 <p id="algo-desc" class="mt-3 text-xs text-gray-400 leading-relaxed">
                     Select an algorithm to view its details.
                 </p>
             </div>
         </main>
+    </div>
+
+    <!-- Tab Content: Analyzer -->
+    <div id="view-analyzer" class="flex-1 overflow-hidden hidden flex-col md:flex-row p-6 gap-6">
+        <div class="w-full md:w-1/3 flex flex-col">
+            <h2 class="text-xl font-bold mb-4 text-blue-400">Custom Algorithm Analyzer</h2>
+            <p class="text-sm text-gray-400 mb-4">Paste your JavaScript algorithm below. The function should accept an array <code class="text-yellow-400">arr</code> or a number <code class="text-yellow-400">n</code>.</p>
+            <textarea id="analyzer-code" class="flex-1 bg-gray-800 text-gray-200 p-4 font-mono text-sm border border-gray-700 rounded focus:border-blue-500 focus:outline-none resize-none" spellcheck="false">
+// Example: Linear Search (O(n))
+// accepts an array 'arr'
+for(let i=0; i<arr.length; i++) {
+if(arr[i] === -1) return i;
+}
+</textarea>
+            <button id="analyze-btn" class="mt-4 bg-green-600 hover:bg-green-500 text-white py-3 rounded font-bold shadow-lg shadow-green-500/30 transition-all">
+                <i class="fas fa-chart-line mr-2"></i>Analyze Complexity
+            </button>
+        </div>
+        <div class="w-full md:w-2/3 bg-gray-800 rounded border border-gray-700 p-4 flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                 <h3 class="font-bold text-gray-300">Performance Graph</h3>
+                 <span id="predicted-complexity" class="text-sm px-3 py-1 bg-gray-700 rounded text-blue-300 font-mono">Prediction: Ready</span>
+            </div>
+            <div class="flex-1 relative w-full h-full">
+                <canvas id="analyzer-canvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tab Content: Theory -->
+    <div id="view-theory" class="flex-1 overflow-y-auto hidden p-8 max-w-5xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8 text-blue-500">Algorithm Analysis & Notations</h1>
+
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Asymptotic Notations</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-gray-800 p-6 rounded border border-gray-700">
+                    <h3 class="text-xl font-bold text-yellow-400 mb-2">Big O (O)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents the <strong class="text-white">upper bound</strong> of the running time. It gives the worst-case complexity.</p>
+                    <code class="block bg-gray-900 p-2 rounded text-green-400 text-xs mb-2">f(n) = O(g(n)) iff ∃ c, n₀ > 0 s.t. 0 ≤ f(n) ≤ c⋅g(n) ∀ n ≥ n₀</code>
+                    <p class="text-xs text-gray-400">Example: Linear Search is O(n).</p>
+                </div>
+                <div class="bg-gray-800 p-6 rounded border border-gray-700">
+                    <h3 class="text-xl font-bold text-red-400 mb-2">Big Omega (Ω)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents the <strong class="text-white">lower bound</strong> of the running time. It gives the best-case complexity.</p>
+                    <code class="block bg-gray-900 p-2 rounded text-green-400 text-xs mb-2">f(n) = Ω(g(n)) iff ∃ c, n₀ > 0 s.t. 0 ≤ c⋅g(n) ≤ f(n) ∀ n ≥ n₀</code>
+                </div>
+                <div class="bg-gray-800 p-6 rounded border border-gray-700">
+                    <h3 class="text-xl font-bold text-blue-400 mb-2">Theta (Θ)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents the <strong class="text-white">tight bound</strong>. The function grows precisely at the rate of g(n).</p>
+                    <code class="block bg-gray-900 p-2 rounded text-green-400 text-xs mb-2">f(n) = Θ(g(n)) iff ∃ c₁, c₂, n₀ > 0 s.t. c₁⋅g(n) ≤ f(n) ≤ c₂⋅g(n)</code>
+                </div>
+                <div class="bg-gray-800 p-6 rounded border border-gray-700">
+                    <h3 class="text-xl font-bold text-purple-400 mb-2">Little o (o)</h3>
+                    <p class="text-gray-300 text-sm mb-4">Represents an upper bound that is <strong class="text-white">not tight</strong>. f(n) becomes insignificant relative to g(n) as n → ∞.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Complexity Examples</h2>
+            <div class="space-y-4">
+                <div class="bg-gray-800 p-4 rounded border border-gray-700">
+                    <h3 class="font-bold text-white">Space Complexity: Matrix Multiplication</h3>
+                    <p class="text-sm text-gray-300 mt-1">To store three N×N matrices (A, B, and Result), the space required is <span class="font-mono text-yellow-300">3 × N²</span>, which is <span class="font-mono text-yellow-300">O(N²)</span>.</p>
+                </div>
+                <div class="bg-gray-800 p-4 rounded border border-gray-700">
+                    <h3 class="font-bold text-white">Space Complexity: Factorial</h3>
+                    <p class="text-sm text-gray-300 mt-1">
+                        <strong class="text-green-400">Iterative:</strong> Uses a single variable. Complexity: <span class="font-mono text-green-400">O(1)</span>.<br>
+                        <strong class="text-red-400">Recursive:</strong> Uses N stack frames. Complexity: <span class="font-mono text-red-400">O(N)</span>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Advanced Topics</h2>
+            <div class="bg-gray-800 p-6 rounded border border-gray-700 text-sm text-gray-300 leading-relaxed">
+                <h3 class="text-lg font-bold text-white mb-2">Fractional Knapsack (Greedy)</h3>
+                <p class="mb-2">Given items with weights and values, maximize total value in a knapsack of capacity W. We can take fractions of items.</p>
+                <p class="mb-2 text-blue-300">Strategy: Calculate Value/Weight ratio for all items. Sort descending. Take as much as possible from the highest ratio item until full.</p>
+                <p>Time Complexity: <strong>O(N log N)</strong> (due to sorting).</p>
+
+                <h3 class="text-lg font-bold text-white mt-4 mb-2">Minimum Spanning Tree (MST)</h3>
+                <p class="mb-2">Find a subset of edges connecting all vertices in a weighted graph with minimum total weight, without cycles.</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li><strong>Prim's Algorithm:</strong> Grow MST from a start node. Always add cheapest edge connecting tree to a non-tree node. <em>O(E + V log V)</em>.</li>
+                    <li><strong>Kruskal's Algorithm:</strong> Sort all edges. Add cheapest edge if it doesn't form a cycle (using Union-Find). <em>O(E log E)</em>.</li>
+                </ul>
+            </div>
+        </section>
     </div>
 
     <script type="module">
