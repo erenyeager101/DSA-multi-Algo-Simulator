@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoVisualizer - Race Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+    <!-- Navbar injected by Navbar.js -->
+
+    <div class="flex flex-col h-full">
+        <!-- Controls -->
+        <div class="bg-gray-800 border-b border-gray-700 p-4 flex flex-wrap gap-4 items-center justify-center shadow-lg z-10">
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-500 font-bold uppercase">Algorithm 1</span>
+                <select id="algo1-select" class="bg-gray-700 text-white border border-gray-600 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500">
+                    <option value="bubble">Bubble Sort</option>
+                    <option value="selection">Selection Sort</option>
+                    <option value="insertion">Insertion Sort</option>
+                    <option value="merge">Merge Sort</option>
+                    <option value="quick">Quick Sort</option>
+                </select>
+            </div>
+
+            <span class="text-gray-500 font-bold">VS</span>
+
+            <div class="flex items-center gap-2">
+                <span class="text-xs text-gray-500 font-bold uppercase">Algorithm 2</span>
+                <select id="algo2-select" class="bg-gray-700 text-white border border-gray-600 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500">
+                    <option value="quick" selected>Quick Sort</option>
+                    <option value="bubble">Bubble Sort</option>
+                    <option value="selection">Selection Sort</option>
+                    <option value="insertion">Insertion Sort</option>
+                    <option value="merge">Merge Sort</option>
+                </select>
+            </div>
+
+            <div class="h-8 w-px bg-gray-600 mx-2"></div>
+
+             <div class="flex items-center gap-2">
+                <label class="text-xs text-gray-500">Size</label>
+                <input type="range" id="race-size" min="10" max="200" value="50" class="w-24 h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500">
+            </div>
+
+            <button id="start-race-btn" class="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded font-bold shadow-lg shadow-green-500/30 transition-all">
+                <i class="fas fa-flag-checkered mr-2"></i>Start Race
+            </button>
+            <button id="reset-race-btn" class="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded font-bold transition-all">
+                <i class="fas fa-undo"></i>
+            </button>
+        </div>
+
+        <!-- Race Area -->
+        <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+            <!-- Left Lane -->
+            <div class="flex-1 flex flex-col border-r border-gray-700 relative">
+                <div class="absolute top-2 left-2 bg-black/50 px-3 py-1 rounded text-sm font-bold text-blue-400 z-10" id="label-algo1">Bubble Sort</div>
+                <div class="flex-1 flex items-end justify-center p-4 bg-gray-900" id="container1">
+                    <canvas id="canvas1" class="w-full h-full"></canvas>
+                </div>
+                <div class="h-12 bg-gray-800 border-t border-gray-700 flex items-center justify-between px-4">
+                    <span class="text-xs text-gray-400">Comparisons: <span id="stats1-comp" class="text-yellow-400 font-mono">0</span></span>
+                    <span class="text-xs text-gray-400">Swaps: <span id="stats1-swap" class="text-red-400 font-mono">0</span></span>
+                </div>
+                <!-- Winner Overlay -->
+                <div id="winner1" class="absolute inset-0 bg-green-500/20 hidden flex items-center justify-center">
+                    <span class="text-4xl font-bold text-green-400 drop-shadow-lg transform -rotate-12 border-4 border-green-400 px-6 py-2 rounded">WINNER</span>
+                </div>
+            </div>
+
+            <!-- Right Lane -->
+            <div class="flex-1 flex flex-col relative">
+                <div class="absolute top-2 left-2 bg-black/50 px-3 py-1 rounded text-sm font-bold text-purple-400 z-10" id="label-algo2">Quick Sort</div>
+                 <div class="flex-1 flex items-end justify-center p-4 bg-gray-900" id="container2">
+                    <canvas id="canvas2" class="w-full h-full"></canvas>
+                </div>
+                 <div class="h-12 bg-gray-800 border-t border-gray-700 flex items-center justify-between px-4">
+                    <span class="text-xs text-gray-400">Comparisons: <span id="stats2-comp" class="text-yellow-400 font-mono">0</span></span>
+                    <span class="text-xs text-gray-400">Swaps: <span id="stats2-swap" class="text-red-400 font-mono">0</span></span>
+                </div>
+                <!-- Winner Overlay -->
+                 <div id="winner2" class="absolute inset-0 bg-green-500/20 hidden flex items-center justify-center">
+                    <span class="text-4xl font-bold text-green-400 drop-shadow-lg transform -rotate-12 border-4 border-green-400 px-6 py-2 rounded">WINNER</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import Navbar from './src/components/Navbar.js';
+        import RaceController from './src/controller/RaceController.js';
+        new Navbar();
+        new RaceController();
+    </script>
+</body>
+</html>
