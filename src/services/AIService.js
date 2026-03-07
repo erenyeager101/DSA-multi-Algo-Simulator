@@ -1,7 +1,8 @@
 // Note: In a production environment, this key should be proxied through a backend to prevent exposure.
 // Since this is a pure frontend demo as requested, we use it directly.
-const API_KEY = "AIzaSyCDLQSvxOUbUaG2hIGiVZH5aRRPjF9j0rI";
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
+ 
+const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+const API_URL = process.env.NEXT_PUBLIC_GEMINI_URL_KEY; 
 
 export default class AIService {
     static async generateContent(prompt) {
