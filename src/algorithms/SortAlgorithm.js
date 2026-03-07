@@ -21,13 +21,16 @@ export default class SortAlgorithm {
     /**
      * Helper to create a trace step.
      */
-    createStep(type, indices, array, sortedIndices = [], description = "") {
+    createStep(type, indices, array, sortedIndices = [], description = "", variables = {}, lineNumbers = [], callStack = []) {
         return {
             type, // 'compare', 'swap', 'overwrite', 'highlight', 'sorted'
             indices,
             array: [...array], // Snapshot
             sortedIndices: [...sortedIndices],
-            description
+            description,
+            variables: { ...variables },
+            lineNumbers: [...lineNumbers],
+            callStack: [...callStack]
         };
     }
 
