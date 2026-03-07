@@ -1,5 +1,4 @@
 import ComplexityAnalyzer from '../analyzer/ComplexityAnalyzer.js';
-import AIService from '../services/AIService.js';
 
 export default class AnalyzerController {
     constructor() {
@@ -8,10 +7,47 @@ export default class AnalyzerController {
         this.dom = {
             code: document.getElementById('analyzer-code'),
             analyzeBtn: document.getElementById('analyze-btn'),
-            aiBtn: document.getElementById('ai-optimize-btn'),
             prediction: document.getElementById('predicted-complexity'),
-            aiPanel: document.getElementById('ai-suggestions'),
-            aiContent: document.getElementById('ai-suggestions-content'),
+            languageSelect: document.getElementById('language-select'),
+            logs: document.getElementById('execution-logs')
+        };
+
+        this.examples = {
+            javascript: `// JavaScript Example: Linear Search (O(n))
+// Your function MUST be named 'solve' and accept an array 'arr'
+function solve(arr) {
+  for(let i=0; i<arr.length; i++) {
+    if(arr[i] === -1) return i;
+  }
+  return -1;
+}`,
+            python: `# Python Example: Linear Search (O(n))
+# Your function MUST be named 'solve' and accept an array 'arr'
+def solve(arr):
+    for i in range(len(arr)):
+        if arr[i] == -1:
+            return i
+    return -1`,
+            java: `// Java Example: Linear Search (O(n))
+// Your class MUST contain a static method named 'solve' that takes an int[]
+public class Solution {
+    public static int solve(int[] arr) {
+        for(int i=0; i<arr.length; i++) {
+            if(arr[i] == -1) return i;
+        }
+        return -1;
+    }
+}`,
+            cpp: `// C++ Example: Linear Search (O(n))
+// Your code MUST contain a function named 'solve' that takes a std::vector<int>
+#include <vector>
+
+int solve(std::vector<int>& arr) {
+    for(int i=0; i<arr.size(); i++) {
+        if(arr[i] == -1) return i;
+    }
+    return -1;
+}`
         };
 
         this.init();
@@ -19,42 +55,50 @@ export default class AnalyzerController {
 
     init() {
         this.dom.analyzeBtn.addEventListener('click', () => this.analyze());
-        this.dom.aiBtn.addEventListener('click', () => this.optimize());
+
+        this.dom.languageSelect.addEventListener('change', (e) => {
+            const lang = e.target.value;
+            this.dom.code.value = this.examples[lang];
+        });
+    }
+
+    logError(msg) {
+        this.dom.logs.classList.remove('hidden');
+        this.dom.logs.textContent = msg;
+    }
+
+    clearLogs() {
+        this.dom.logs.classList.add('hidden');
+        this.dom.logs.textContent = '';
     }
 
     async analyze() {
         const code = this.dom.code.value;
+        const lang = this.dom.languageSelect.value;
+
+        this.clearLogs();
         this.dom.analyzeBtn.disabled = true;
-        this.dom.analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Running...';
+        this.dom.analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing via Cloud (may take a moment)...';
 
         try {
             await new Promise(r => setTimeout(r, 100)); // UI refresh
-            const complexity = await this.analyzer.analyze(code);
-            this.dom.prediction.textContent = `Prediction: ${complexity}`;
+
+            this.dom.prediction.textContent = `Prediction: Running...`;
+            const result = await this.analyzer.analyze(code, lang);
+
+            if (result.error) {
+                this.logError(result.error);
+                this.dom.prediction.textContent = `Prediction: Failed`;
+            } else {
+                this.dom.prediction.textContent = `Prediction: ${result.complexity}`;
+            }
+
         } catch (error) {
-            alert("Error analyzing code. Check console.");
+            this.logError("Execution failed. Check your syntax.");
             console.error(error);
         } finally {
             this.dom.analyzeBtn.disabled = false;
-            this.dom.analyzeBtn.innerHTML = '<i class="fas fa-chart-line mr-2"></i>Analyze';
-        }
-    }
-
-    async optimize() {
-        const code = this.dom.code.value;
-        this.dom.aiBtn.disabled = true;
-        this.dom.aiBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Thinking...';
-        this.dom.aiPanel.classList.remove('hidden');
-        this.dom.aiContent.textContent = "Analyzing code with AI...";
-
-        try {
-            const suggestion = await AIService.optimizeCode(code);
-            this.dom.aiContent.textContent = suggestion;
-        } catch (error) {
-            this.dom.aiContent.textContent = "AI Service Error.";
-        } finally {
-            this.dom.aiBtn.disabled = false;
-            this.dom.aiBtn.innerHTML = '<i class="fas fa-magic mr-2"></i>AI Optimize';
+            this.dom.analyzeBtn.innerHTML = '<i class="fas fa-chart-line mr-2"></i>Analyze Complexity';
         }
     }
 }
