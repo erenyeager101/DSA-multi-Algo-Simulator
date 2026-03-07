@@ -6,53 +6,164 @@ export default class ComplexityAnalyzer {
 
     /**
      * Runs the user code with varying input sizes and plots the result.
-     * @param {string} userCode The function body as string. It must accept 'arr' or 'n'.
+     * @param {string} userCode The function body as string. It must contain 'solve'.
+     * @param {string} lang The language to use (javascript, python, java, cpp)
      */
-    async analyze(userCode) {
-        const sizes = [10, 50, 100, 200, 500, 1000, 2000, 5000];
+    async analyze(userCode, lang = 'javascript') {
+        const sizes = [100, 500, 1000, 2000, 4000];
         const times = [];
-        const ops = []; // if we can count ops, otherwise just time
 
-        // Safe-ish evaluation: we create a Function from string
-        // The user code is expected to be the body of a function that takes 'n' or 'arr'.
-        // If it takes 'arr', we generate a random array of size n.
-        // If it takes 'n', we just pass n.
-
-        let func;
-        try {
-            // We'll wrap it to detect if it expects arr or n
-            // Heuristic: check if string contains 'arr'
-            if (userCode.includes('arr')) {
-                func = new Function('arr', userCode);
-            } else {
-                func = new Function('n', userCode);
-            }
-        } catch (e) {
-            alert("Error parsing code: " + e.message);
-            return;
-        }
-
-        for (let n of sizes) {
-            let input;
-            if (userCode.includes('arr')) {
-                input = Array.from({length: n}, () => Math.floor(Math.random() * 10000));
-            } else {
-                input = n;
-            }
-
-            const start = performance.now();
+        // For JavaScript, run locally to avoid API limits and for speed.
+        if (lang === 'javascript') {
             try {
-                func(input);
+                // To support full function syntax rather than just the body, we eval it
+                // We wrap it in an IIFE returning the solve function.
+                let funcString = userCode + `\n; return typeof solve === 'function' ? solve : null;`;
+                let getFunc = new Function(funcString);
+                let solveFunc = getFunc();
+
+                if (!solveFunc) return { error: "Could not find a function named 'solve'." };
+
+                for (let n of sizes) {
+                    let input = Array.from({length: n}, () => Math.floor(Math.random() * 10000));
+                    const start = performance.now();
+                    solveFunc(input);
+                    const end = performance.now();
+                    times.push(end - start);
+                }
             } catch (e) {
-                console.error("Runtime error", e);
-                break; // Stop if error
+                return { error: `JavaScript Execution Error: ${e.message}` };
             }
-            const end = performance.now();
-            times.push(end - start);
+        } else {
+            // Execute via Piston API
+            const result = await this.executeViaPiston(userCode, lang, sizes);
+            if (result.error) return result;
+            times.push(...result.times);
         }
 
         this.plot(sizes.slice(0, times.length), times);
-        return this.fitCurve(sizes.slice(0, times.length), times);
+        const complexity = this.fitCurve(sizes.slice(0, times.length), times);
+        return { complexity };
+    }
+
+    async executeViaPiston(userCode, lang, sizes) {
+        // Map our language names to Piston's runtime names
+        const langMap = {
+            python: { language: 'python', version: '3.10.0' },
+            java: { language: 'java', version: '15.0.2' },
+            cpp: { language: 'cpp', version: '10.2.0' }
+        };
+
+        const config = langMap[lang];
+        if (!config) return { error: `Unsupported language: ${lang}` };
+
+        // We generate a wrapper code that builds the arrays, calls solve(), and prints the time for each size.
+        let wrapperCode = '';
+        if (lang === 'python') {
+            wrapperCode = `
+import time
+import random
+
+${userCode}
+
+sizes = [${sizes.join(',')}]
+for n in sizes:
+    arr = [random.randint(0, 10000) for _ in range(n)]
+    start = time.perf_counter()
+    solve(arr)
+    end = time.perf_counter()
+    print((end - start) * 1000) # Print in milliseconds
+`;
+        } else if (lang === 'java') {
+            wrapperCode = `
+import java.util.Random;
+
+${userCode.replace(/public class \w+/, "class Solution")}
+
+public class Main {
+    public static void main(String[] args) {
+        int[] sizes = {${sizes.join(',')}};
+        Random rand = new Random();
+        for (int n : sizes) {
+            int[] arr = new int[n];
+            for (int i = 0; i < n; i++) arr[i] = rand.nextInt(10000);
+
+            long start = System.nanoTime();
+            Solution.solve(arr);
+            long end = System.nanoTime();
+
+            System.out.println((end - start) / 1000000.0);
+        }
+    }
+}
+`;
+        } else if (lang === 'cpp') {
+            wrapperCode = `
+#include <iostream>
+#include <vector>
+#include <chrono>
+#include <random>
+
+${userCode}
+
+int main() {
+    std::vector<int> sizes = {${sizes.join(',')}};
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dis(0, 10000);
+
+    for (int n : sizes) {
+        std::vector<int> arr(n);
+        for (int i = 0; i < n; i++) arr[i] = dis(gen);
+
+        auto start = std::chrono::high_resolution_clock::now();
+        solve(arr);
+        auto end = std::chrono::high_resolution_clock::now();
+
+        std::chrono::duration<double, std::milli> duration = end - start;
+        std::cout << duration.count() << std::endl;
+    }
+    return 0;
+}
+`;
+        }
+
+        try {
+            const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    language: config.language,
+                    version: config.version,
+                    files: [{ content: wrapperCode }]
+                })
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                return { error: `Piston API Error: ${data.message || response.statusText}` };
+            }
+
+            if (data.compile && data.compile.code !== 0) {
+                return { error: `Compilation Error:\n${data.compile.output}` };
+            }
+
+            if (data.run.code !== 0) {
+                return { error: `Runtime Error:\n${data.run.output}` };
+            }
+
+            // Parse output
+            const times = data.run.output.trim().split('\n').map(parseFloat);
+
+            if (times.some(isNaN)) {
+                 return { error: `Execution Output Error. Expected times, got:\n${data.run.output}` };
+            }
+
+            return { times };
+        } catch (error) {
+            return { error: `Network error reaching execution API: ${error.message}` };
+        }
     }
 
     plot(sizes, times) {

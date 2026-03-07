@@ -12,42 +12,75 @@
 <body class="bg-gray-900 text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
     <!-- Navbar injected by Navbar.js -->
 
-    <div class="flex flex-1 overflow-hidden flex-col md:flex-row p-6 gap-6">
-        <div class="w-full md:w-1/3 flex flex-col">
-            <h2 class="text-xl font-bold mb-4 text-blue-400">Custom Algorithm Analyzer</h2>
-            <p class="text-sm text-gray-400 mb-4">Paste your JavaScript algorithm below. The function should accept an array <code class="text-yellow-400">arr</code> or a number <code class="text-yellow-400">n</code>.</p>
-            <textarea id="analyzer-code" class="flex-1 bg-gray-800 text-gray-200 p-4 font-mono text-sm border border-gray-700 rounded focus:border-blue-500 focus:outline-none resize-none" spellcheck="false">
-// Example: Linear Search (O(n))
-// accepts an array 'arr'
-for(let i=0; i<arr.length; i++) {
-  if(arr[i] === -1) return i;
+    <div class="flex flex-1 overflow-hidden flex-col md:flex-row p-6 gap-6 overflow-y-auto">
+        <div class="w-full md:w-1/2 flex flex-col gap-4">
+            <div>
+                <h2 class="text-xl font-bold mb-2 text-blue-400">Multi-Language Complexity Analyzer</h2>
+                <p class="text-sm text-gray-400">Write your algorithm below. Choose your language. The analyzer will run your code against arrays of increasing size to determine its asymptotic time complexity.</p>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <label class="text-sm font-semibold text-gray-300">Language:</label>
+                <select id="language-select" class="bg-gray-700 text-white border border-gray-600 rounded px-3 py-1 focus:outline-none focus:border-blue-500 transition-colors text-sm">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                </select>
+            </div>
+
+            <textarea id="analyzer-code" class="flex-1 min-h-[300px] bg-gray-800 text-gray-200 p-4 font-mono text-sm border border-gray-700 rounded focus:border-blue-500 focus:outline-none resize-none" spellcheck="false">
+// JavaScript Example: Linear Search (O(n))
+// Your function MUST be named 'solve' and accept an array 'arr'
+function solve(arr) {
+  for(let i=0; i<arr.length; i++) {
+    if(arr[i] === -1) return i;
+  }
+  return -1;
 }
 </textarea>
-            <div class="flex gap-2 mt-4">
-                 <button id="analyze-btn" class="flex-1 bg-green-600 hover:bg-green-500 text-white py-3 rounded font-bold shadow-lg shadow-green-500/30 transition-all">
-                    <i class="fas fa-chart-line mr-2"></i>Analyze
+            <div class="flex gap-2">
+                 <button id="analyze-btn" class="flex-1 bg-green-600 hover:bg-green-500 text-white py-3 rounded font-bold shadow-lg shadow-green-500/30 transition-all flex items-center justify-center">
+                    <i class="fas fa-chart-line mr-2"></i>Analyze Complexity
                 </button>
-                <button id="ai-optimize-btn" class="flex-1 bg-purple-600 hover:bg-purple-500 text-white py-3 rounded font-bold shadow-lg shadow-purple-500/30 transition-all">
-                    <i class="fas fa-magic mr-2"></i>AI Optimize
-                </button>
+            </div>
+
+            <!-- DSA Theory Documentation Section -->
+            <div class="bg-gray-800 rounded border border-gray-700 p-6 mt-4 flex-1">
+                <h3 class="font-bold text-lg text-blue-300 mb-4 border-b border-gray-700 pb-2"><i class="fas fa-book-open mr-2"></i>DSA Concept Guide (GFG Style)</h3>
+
+                <div class="space-y-4 text-sm text-gray-300 overflow-y-auto pr-2 max-h-64">
+                    <div>
+                        <h4 class="font-bold text-white mb-1">Time Complexity & Big O Notation</h4>
+                        <p class="leading-relaxed">Big O notation is used to describe the performance or complexity of an algorithm. It describes the worst-case scenario, indicating the maximum time an algorithm will take to complete as the input size <code class="bg-gray-900 px-1 rounded text-yellow-400">N</code> grows.</p>
+                        <ul class="list-disc pl-5 mt-2 space-y-1">
+                            <li><strong class="text-blue-400">O(1) Constant:</strong> Time does not depend on input size. (e.g., Array index lookup)</li>
+                            <li><strong class="text-green-400">O(N) Linear:</strong> Time grows proportionally with input size. (e.g., Linear Search)</li>
+                            <li><strong class="text-yellow-400">O(N log N) Linearithmic:</strong> Highly efficient sorting algorithms. (e.g., Merge Sort, Quick Sort)</li>
+                            <li><strong class="text-red-400">O(N²) Quadratic:</strong> Inefficient nested loops. (e.g., Bubble Sort, Selection Sort)</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h4 class="font-bold text-white mb-1">How the Analyzer Works</h4>
+                        <p class="leading-relaxed">When you click analyze, your code is wrapped in a benchmarking template. We generate random arrays of varying sizes (e.g., 100, 500, 1000, 5000 elements) and feed them to your <code class="bg-gray-900 px-1 rounded text-pink-400">solve(arr)</code> function. The execution time is measured in milliseconds and plotted on the graph to reveal the curve (Linear, Quadratic, etc).</p>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="w-full md:w-2/3 flex flex-col gap-4">
-             <div class="bg-gray-800 rounded border border-gray-700 p-4 flex flex-col flex-1">
+        <div class="w-full md:w-1/2 flex flex-col gap-4">
+             <div class="bg-gray-800 rounded border border-gray-700 p-4 flex flex-col h-full min-h-[400px]">
                 <div class="flex justify-between items-center mb-4">
                      <h3 class="font-bold text-gray-300">Performance Graph</h3>
                      <span id="predicted-complexity" class="text-sm px-3 py-1 bg-gray-700 rounded text-blue-300 font-mono">Prediction: Ready</span>
                 </div>
-                <div class="flex-1 relative w-full h-full min-h-[300px]">
+                <div class="flex-1 relative w-full h-full flex items-center justify-center">
                     <canvas id="analyzer-canvas"></canvas>
                 </div>
-            </div>
-
-            <!-- AI Suggestions Panel -->
-            <div id="ai-suggestions" class="bg-gray-800 rounded border border-gray-700 p-4 hidden">
-                 <h3 class="font-bold text-purple-400 mb-2"><i class="fas fa-lightbulb mr-2"></i>AI Suggestions</h3>
-                 <div id="ai-suggestions-content" class="text-sm text-gray-300 font-mono whitespace-pre-wrap max-h-40 overflow-y-auto"></div>
+                <div id="execution-logs" class="mt-4 p-3 bg-black/50 border border-gray-700 rounded font-mono text-xs text-gray-400 h-32 overflow-y-auto hidden">
+                    <!-- Execution output/errors will appear here -->
+                </div>
             </div>
         </div>
     </div>
