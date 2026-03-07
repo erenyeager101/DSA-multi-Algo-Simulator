@@ -44,19 +44,16 @@ export default class AIService {
 
     static async optimizeCode(code) {
         const prompt = `
-            You are a Senior Software Engineer specializing in Algorithms.
-            Analyze the following JavaScript code for Time and Space Complexity.
-            Then, suggest specific optimizations or alternative algorithms if better ones exist for general cases.
+            You are an expert Computer Science Professor and algorithmic analyst.
+            Analyze the following code for Time Complexity. You MUST output the predicted worst-case Time Complexity in the exact format:
+            "Complexity: O(N)" or "Complexity: O(N log N)", etc., on its own line so the frontend can easily parse it.
 
-            Code:
-            \`\`\`javascript
+            Then, provide a brief (1-3 paragraph) explanation of why that is the case, describing the loops, recursion, or method calls that dictate the performance.
+
+            Code to analyze:
+            \`\`\`
             ${code}
             \`\`\`
-
-            Format the response as:
-            1. **Complexity Analysis**: Time & Space.
-            2. **Feedback**: What is good/bad.
-            3. **Optimization**: Concrete suggestions or refactored code block.
         `;
         return await this.generateContent(prompt);
     }

@@ -63,7 +63,8 @@ function solve(arr) {
 
                     <div>
                         <h4 class="font-bold text-white mb-1">How the Analyzer Works</h4>
-                        <p class="leading-relaxed">When you click analyze, your code is wrapped in a benchmarking template. We generate random arrays of varying sizes (e.g., 100, 500, 1000, 5000 elements) and feed them to your <code class="bg-gray-900 px-1 rounded text-pink-400">solve(arr)</code> function. The execution time is measured in milliseconds and plotted on the graph to reveal the curve (Linear, Quadratic, etc).</p>
+                        <p class="leading-relaxed">When you click analyze for <strong>JavaScript</strong>, your code is benchmarked locally. Random arrays of varying sizes are passed to your function and execution time is plotted on the graph.</p>
+                        <p class="leading-relaxed mt-2">For <strong>Python, Java, and C++</strong>, your code is sent to Gemini AI for static analysis. The AI calculates the asymptotic complexity and returns a detailed explanation of why it performs as it does.</p>
                     </div>
                 </div>
             </div>
@@ -72,14 +73,14 @@ function solve(arr) {
         <div class="w-full md:w-1/2 flex flex-col gap-4">
              <div class="bg-gray-800 rounded border border-gray-700 p-4 flex flex-col h-full min-h-[400px]">
                 <div class="flex justify-between items-center mb-4">
-                     <h3 class="font-bold text-gray-300">Performance Graph</h3>
+                     <h3 class="font-bold text-gray-300">Analysis Results</h3>
                      <span id="predicted-complexity" class="text-sm px-3 py-1 bg-gray-700 rounded text-blue-300 font-mono">Prediction: Ready</span>
                 </div>
                 <div class="flex-1 relative w-full h-full flex items-center justify-center">
                     <canvas id="analyzer-canvas"></canvas>
                 </div>
-                <div id="execution-logs" class="mt-4 p-3 bg-black/50 border border-gray-700 rounded font-mono text-xs text-gray-400 h-32 overflow-y-auto hidden">
-                    <!-- Execution output/errors will appear here -->
+                <div id="execution-logs" class="mt-4 p-4 bg-gray-900 border border-gray-700 rounded text-sm text-gray-300 flex-1 min-h-[150px] overflow-y-auto hidden">
+                    <!-- Execution output/errors/AI explanation will appear here -->
                 </div>
             </div>
         </div>

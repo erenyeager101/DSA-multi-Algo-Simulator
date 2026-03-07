@@ -42,3 +42,9 @@
 127.0.0.1 - - [07/Mar/2026 18:09:01] "GET /analyzer.html HTTP/1.1" 200 -
 127.0.0.1 - - [07/Mar/2026 18:09:02] "GET /src/controller/AnalyzerController.js HTTP/1.1" 200 -
 127.0.0.1 - - [07/Mar/2026 18:09:02] "GET /src/analyzer/ComplexityAnalyzer.js HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2026 18:18:37] "GET /analyzer.html HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2026 18:18:37] "GET /style.css HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2026 18:18:38] "GET /src/components/Navbar.js HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2026 18:18:38] "GET /src/controller/AnalyzerController.js HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2026 18:18:38] "GET /src/analyzer/ComplexityAnalyzer.js HTTP/1.1" 200 -
+127.0.0.1 - - [07/Mar/2026 18:18:38] "GET /src/services/AIService.js HTTP/1.1" 200 -
