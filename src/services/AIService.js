@@ -1,8 +1,8 @@
 // Note: In a production environment, this key should be proxied through a backend to prevent exposure.
 // Since this is a pure frontend demo as requested, we use it directly.
  
-const API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
-const API_URL = process.env.NEXT_PUBLIC_GEMINI_URL_KEY; 
+const API_KEY = import.meta.env.NEXT_PUBLIC_GEMINI_API_KEY;
+const API_URL = import.meta.env.NEXT_PUBLIC_GEMINI_URL_KEY; 
 
 export default class AIService {
     static async generateContent(prompt) {
