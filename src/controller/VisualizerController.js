@@ -40,11 +40,9 @@ class VisualizerController {
             algoDesc: document.getElementById('algo-desc'),
             toggleCodeBtn: document.getElementById('toggle-code-btn'),
             codePanel: document.getElementById('code-panel'),
-            // AI
-            aiExplainBtn: document.getElementById('ai-explain-btn'),
-            aiModal: document.getElementById('ai-modal'),
-            closeAiModal: document.getElementById('close-ai-modal'),
-            aiContent: document.getElementById('ai-content'),
+            // Visual Debugger
+            variablesDisplay: document.getElementById('variables-display'),
+            callstackDisplay: document.getElementById('callstack-display')
         };
 
         this.init();
@@ -113,15 +111,6 @@ class VisualizerController {
              this.dom.codePanel.classList.toggle('md:translate-x-full');
              this.dom.codePanel.classList.toggle('md:translate-x-0');
         });
-
-        // AI
-        this.dom.aiExplainBtn.addEventListener('click', () => this.explainCurrentStep());
-        this.dom.closeAiModal.addEventListener('click', () => {
-            this.dom.aiModal.classList.add('hidden');
-        });
-        this.dom.aiModal.addEventListener('click', (e) => {
-             if(e.target === this.dom.aiModal) this.dom.aiModal.classList.add('hidden');
-        });
     }
 
     setAlgorithm(name) {
@@ -138,8 +127,50 @@ class VisualizerController {
     }
 
     updateAlgorithmInfo() {
-        this.dom.codeDisplay.textContent = this.algorithm.code;
+        this.renderCode(this.algorithm.code, []);
         this.dom.algoDesc.textContent = this.algorithm.description;
+    }
+
+    renderCode(code, activeLines = []) {
+        const lines = code.split('\n');
+        this.dom.codeDisplay.innerHTML = '';
+        lines.forEach((line, index) => {
+            const lineNum = index + 1;
+            const lineEl = document.createElement('div');
+            lineEl.className = 'flex group font-mono text-xs';
+
+            const numEl = document.createElement('span');
+            numEl.className = 'text-gray-600 mr-4 select-none w-4 text-right';
+            numEl.textContent = lineNum;
+
+            const codeEl = document.createElement('span');
+            codeEl.className = 'whitespace-pre';
+            // Simple syntax highlighting classes
+            // We need to be careful with replace, replacing numbers before we add our own spans.
+            let highlighted = line
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); // Escape HTML
+
+            highlighted = highlighted
+                .replace(/(function|let|const|var|if|else|while|for|return)\b/g, '<span class="text-pink-400">$1</span>')
+                .replace(/(\b\d+\b)(?![^<]*>)/g, '<span class="text-orange-400">$1</span>')
+                .replace(/([\[\]\{\}\(\)])/g, '<span class="text-yellow-200">$1</span>');
+
+            codeEl.innerHTML = highlighted;
+
+            if (activeLines.includes(lineNum)) {
+                lineEl.classList.add('bg-blue-900/50', 'border-l-2', 'border-blue-400');
+            } else {
+                lineEl.classList.add('border-l-2', 'border-transparent');
+            }
+
+            lineEl.appendChild(numEl);
+            lineEl.appendChild(codeEl);
+            this.dom.codeDisplay.appendChild(lineEl);
+
+            if (activeLines.includes(lineNum)) {
+                lineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
     }
 
     generateArray() {
@@ -214,7 +245,56 @@ class VisualizerController {
             this.visualizer.draw(step.array, step);
             this.updateStatsFromTrace(this.currentStep);
             this.dom.progressSlider.value = this.currentStep;
+
+            // Visual Debugger Update
+            if (step.lineNumbers) {
+                this.renderCode(this.algorithm.code, step.lineNumbers);
+            }
+            if (step.variables) {
+                this.renderVariables(step.variables);
+            }
+            if (step.callStack) {
+                this.renderCallStack(step.callStack);
+            }
         }
+    }
+
+    renderVariables(variables) {
+        this.dom.variablesDisplay.innerHTML = '';
+        if (Object.keys(variables).length === 0) {
+            this.dom.variablesDisplay.innerHTML = '<span class="text-gray-600 italic">No local variables</span>';
+            return;
+        }
+        for (const [key, value] of Object.entries(variables)) {
+            const row = document.createElement('div');
+            row.className = 'flex justify-between border-b border-gray-800 py-1';
+
+            const nameEl = document.createElement('span');
+            nameEl.className = 'text-blue-400 font-bold';
+            nameEl.textContent = key;
+
+            const valEl = document.createElement('span');
+            valEl.className = 'text-green-400';
+            valEl.textContent = typeof value === 'object' ? JSON.stringify(value) : value;
+
+            row.appendChild(nameEl);
+            row.appendChild(valEl);
+            this.dom.variablesDisplay.appendChild(row);
+        }
+    }
+
+    renderCallStack(stack) {
+        this.dom.callstackDisplay.innerHTML = '';
+        if (stack.length === 0) {
+            this.dom.callstackDisplay.innerHTML = '<span class="text-gray-600 italic">Stack empty</span>';
+            return;
+        }
+        [...stack].reverse().forEach((frame, i) => {
+            const el = document.createElement('div');
+            el.className = `py-1 truncate ${i === 0 ? 'text-blue-300 font-bold' : 'text-gray-500'}`;
+            el.textContent = frame;
+            this.dom.callstackDisplay.appendChild(el);
+        });
     }
 
     updateStatsFromTrace(index) {
@@ -231,29 +311,6 @@ class VisualizerController {
         this.dom.statsComparisons.textContent = c;
         this.dom.statsSwaps.textContent = s;
         this.dom.statsState.textContent = state;
-    }
-
-    async explainCurrentStep() {
-        if (this.trace.length === 0) {
-            alert("Please run the algorithm first.");
-            return;
-        }
-
-        this.pause();
-        this.dom.aiModal.classList.remove('hidden');
-        this.dom.aiContent.innerHTML = '<i class="fas fa-circle-notch fa-spin text-2xl text-purple-500"></i><span class="ml-2">Analyzing context...</span>';
-
-        const step = this.trace[this.currentStep];
-        const explanation = await AIService.explainStep(
-            this.algorithm.name,
-            step.description,
-            step.array,
-            step.indices
-        );
-
-        // Simple markdown parsing
-        const formatted = explanation.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-        this.dom.aiContent.innerHTML = formatted;
     }
 }
 

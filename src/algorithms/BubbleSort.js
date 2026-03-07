@@ -30,26 +30,30 @@ export default class BubbleSort extends SortAlgorithm {
         const n = arr.length;
         const sortedIndices = [];
 
+        const callStack = ['bubbleSort(arr)'];
+
         // Initial State
-        trace.push(this.createStep('start', [], arr, sortedIndices, 'Starting Bubble Sort'));
+        trace.push(this.createStep('start', [], arr, sortedIndices, 'Starting Bubble Sort', { n }, [1, 2], callStack));
 
         for (let i = 0; i < n; i++) {
             let swapped = false;
+            trace.push(this.createStep('highlight', [], arr, sortedIndices, `Starting pass ${i}`, { n, i, swapped }, [3], callStack));
+
             for (let j = 0; j < n - i - 1; j++) {
                 // Compare
-                trace.push(this.createStep('compare', [j, j + 1], arr, sortedIndices, `Comparing indices ${j} and ${j+1}`));
+                trace.push(this.createStep('compare', [j, j + 1], arr, sortedIndices, `Comparing indices ${j} and ${j+1}`, { n, i, j, swapped }, [4, 5], callStack));
 
                 if (arr[j] > arr[j + 1]) {
                     // Swap
                     this.swap(arr, j, j + 1);
                     swapped = true;
-                    trace.push(this.createStep('swap', [j, j + 1], arr, sortedIndices, `Swapping indices ${j} and ${j+1}`));
+                    trace.push(this.createStep('swap', [j, j + 1], arr, sortedIndices, `Swapping indices ${j} and ${j+1}`, { n, i, j, temp: arr[j], swapped }, [6, 7, 8], callStack));
                 }
             }
 
             // Mark end of pass as sorted
             sortedIndices.push(n - 1 - i);
-            trace.push(this.createStep('sorted', [n - 1 - i], arr, sortedIndices, `Element at ${n - 1 - i} is sorted`));
+            trace.push(this.createStep('sorted', [n - 1 - i], arr, sortedIndices, `Element at ${n - 1 - i} is sorted`, { n, i, swapped }, [3], callStack));
 
             // Optimization: if no swaps, array is sorted
             if (!swapped) {
@@ -57,13 +61,13 @@ export default class BubbleSort extends SortAlgorithm {
                  for(let k = 0; k < n - 1 - i; k++) {
                      if (!sortedIndices.includes(k)) sortedIndices.push(k);
                  }
-                 trace.push(this.createStep('sorted', [], arr, sortedIndices, 'Early termination: Array is sorted'));
+                 trace.push(this.createStep('sorted', [], arr, sortedIndices, 'Early termination: Array is sorted', { n, i, swapped }, [12], callStack));
                  break;
             }
         }
 
         // Final State
-        trace.push(this.createStep('finish', [], arr, sortedIndices, 'Sorting Complete'));
+        trace.push(this.createStep('finish', [], arr, sortedIndices, 'Sorting Complete', { n }, [12], callStack));
 
         return trace;
     }
