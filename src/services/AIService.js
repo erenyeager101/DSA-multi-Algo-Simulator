@@ -1,34 +1,25 @@
-// Note: In a production environment, this key should be proxied through a backend to prevent exposure.
-// Since this is a pure frontend demo as requested, we use it directly.
- 
-const API_KEY = import.meta.env.NEXT_PUBLIC_GEMINI_API_KEY;
-const API_URL = import.meta.env.NEXT_PUBLIC_GEMINI_URL_KEY; 
+// Requests are routed through the /api/gemini serverless function so that
+// the Gemini API key is never exposed to the browser.
 
 export default class AIService {
     static async generateContent(prompt) {
         try {
-            const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+            const response = await fetch('/api/gemini', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: prompt
-                        }]
-                    }]
-                })
+                body: JSON.stringify({ prompt })
             });
 
             const data = await response.json();
 
-            if (data.error) {
+            if (!response.ok || data.error) {
                 console.error("AI Service Error:", data.error);
                 return "Error generating AI response. Please check console.";
             }
 
-            return data.candidates[0].content.parts[0].text;
+            return data.text;
         } catch (error) {
             console.error("AI Network Error:", error);
             return "Network error connecting to AI Service.";
