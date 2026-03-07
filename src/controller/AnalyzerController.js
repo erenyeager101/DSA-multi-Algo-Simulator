@@ -78,7 +78,15 @@ int solve(std::vector<int>& arr) {
 
         this.clearLogs();
         this.dom.analyzeBtn.disabled = true;
-        this.dom.analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Analyzing via Cloud (may take a moment)...';
+
+        if (lang === 'javascript') {
+            this.dom.analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Running locally...';
+        } else {
+            this.dom.analyzeBtn.innerHTML = '<i class="fas fa-robot fa-spin mr-2"></i>Analyzing with Gemini AI...';
+            // Clear graph area
+            const ctx = document.getElementById('analyzer-canvas').getContext('2d');
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        }
 
         try {
             await new Promise(r => setTimeout(r, 100)); // UI refresh
@@ -91,10 +99,18 @@ int solve(std::vector<int>& arr) {
                 this.dom.prediction.textContent = `Prediction: Failed`;
             } else {
                 this.dom.prediction.textContent = `Prediction: ${result.complexity}`;
+                if (result.type === 'ai') {
+                    // Show explanation in logs
+                    this.dom.logs.classList.remove('hidden');
+                    // Simple bold formatting
+                    this.dom.logs.innerHTML = result.explanation.replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
+                } else {
+                    this.dom.logs.classList.add('hidden');
+                }
             }
 
         } catch (error) {
-            this.logError("Execution failed. Check your syntax.");
+            this.logError("Execution failed. Check your syntax or API connectivity.");
             console.error(error);
         } finally {
             this.dom.analyzeBtn.disabled = false;

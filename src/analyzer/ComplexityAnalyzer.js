@@ -1,3 +1,5 @@
+import AIService from '../services/AIService.js';
+
 export default class ComplexityAnalyzer {
     constructor(canvasId) {
         this.canvasId = canvasId;
@@ -5,8 +7,8 @@ export default class ComplexityAnalyzer {
     }
 
     /**
-     * Runs the user code with varying input sizes and plots the result.
-     * @param {string} userCode The function body as string. It must contain 'solve'.
+     * Analyzes the user code.
+     * @param {string} userCode The function body as string.
      * @param {string} lang The language to use (javascript, python, java, cpp)
      */
     async analyze(userCode, lang = 'javascript') {
@@ -31,138 +33,31 @@ export default class ComplexityAnalyzer {
                     const end = performance.now();
                     times.push(end - start);
                 }
+
+                this.plot(sizes.slice(0, times.length), times);
+                const complexity = this.fitCurve(sizes.slice(0, times.length), times);
+                return { complexity, type: 'local' };
             } catch (e) {
                 return { error: `JavaScript Execution Error: ${e.message}` };
             }
         } else {
-            // Execute via Piston API
-            const result = await this.executeViaPiston(userCode, lang, sizes);
-            if (result.error) return result;
-            times.push(...result.times);
-        }
-
-        this.plot(sizes.slice(0, times.length), times);
-        const complexity = this.fitCurve(sizes.slice(0, times.length), times);
-        return { complexity };
-    }
-
-    async executeViaPiston(userCode, lang, sizes) {
-        // Map our language names to Piston's runtime names
-        const langMap = {
-            python: { language: 'python', version: '3.10.0' },
-            java: { language: 'java', version: '15.0.2' },
-            cpp: { language: 'cpp', version: '10.2.0' }
-        };
-
-        const config = langMap[lang];
-        if (!config) return { error: `Unsupported language: ${lang}` };
-
-        // We generate a wrapper code that builds the arrays, calls solve(), and prints the time for each size.
-        let wrapperCode = '';
-        if (lang === 'python') {
-            wrapperCode = `
-import time
-import random
-
-${userCode}
-
-sizes = [${sizes.join(',')}]
-for n in sizes:
-    arr = [random.randint(0, 10000) for _ in range(n)]
-    start = time.perf_counter()
-    solve(arr)
-    end = time.perf_counter()
-    print((end - start) * 1000) # Print in milliseconds
-`;
-        } else if (lang === 'java') {
-            wrapperCode = `
-import java.util.Random;
-
-${userCode.replace(/public class \w+/, "class Solution")}
-
-public class Main {
-    public static void main(String[] args) {
-        int[] sizes = {${sizes.join(',')}};
-        Random rand = new Random();
-        for (int n : sizes) {
-            int[] arr = new int[n];
-            for (int i = 0; i < n; i++) arr[i] = rand.nextInt(10000);
-
-            long start = System.nanoTime();
-            Solution.solve(arr);
-            long end = System.nanoTime();
-
-            System.out.println((end - start) / 1000000.0);
-        }
-    }
-}
-`;
-        } else if (lang === 'cpp') {
-            wrapperCode = `
-#include <iostream>
-#include <vector>
-#include <chrono>
-#include <random>
-
-${userCode}
-
-int main() {
-    std::vector<int> sizes = {${sizes.join(',')}};
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 10000);
-
-    for (int n : sizes) {
-        std::vector<int> arr(n);
-        for (int i = 0; i < n; i++) arr[i] = dis(gen);
-
-        auto start = std::chrono::high_resolution_clock::now();
-        solve(arr);
-        auto end = std::chrono::high_resolution_clock::now();
-
-        std::chrono::duration<double, std::milli> duration = end - start;
-        std::cout << duration.count() << std::endl;
-    }
-    return 0;
-}
-`;
-        }
-
-        try {
-            const response = await fetch('https://emkc.org/api/v2/piston/execute', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    language: config.language,
-                    version: config.version,
-                    files: [{ content: wrapperCode }]
-                })
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                return { error: `Piston API Error: ${data.message || response.statusText}` };
+            // For Python, Java, C++, we send to Gemini API for static analysis
+            if (this.chart) {
+                this.chart.destroy();
+                this.chart = null;
             }
+            try {
+                const analysisText = await AIService.optimizeCode(userCode);
 
-            if (data.compile && data.compile.code !== 0) {
-                return { error: `Compilation Error:\n${data.compile.output}` };
+                // Extremely simple parser to extract predicted Big O from Gemini's response
+                // Gemini will be instructed to return it in a specific format in AIService.
+                const match = analysisText.match(/Complexity:\s*(O\([^\)]+\))/i);
+                const complexity = match ? match[1] : "Check Explanation";
+
+                return { complexity, type: 'ai', explanation: analysisText };
+            } catch(e) {
+                return { error: `AI Analysis Error: ${e.message}` };
             }
-
-            if (data.run.code !== 0) {
-                return { error: `Runtime Error:\n${data.run.output}` };
-            }
-
-            // Parse output
-            const times = data.run.output.trim().split('\n').map(parseFloat);
-
-            if (times.some(isNaN)) {
-                 return { error: `Execution Output Error. Expected times, got:\n${data.run.output}` };
-            }
-
-            return { times };
-        } catch (error) {
-            return { error: `Network error reaching execution API: ${error.message}` };
         }
     }
 
