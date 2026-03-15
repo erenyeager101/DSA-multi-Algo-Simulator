@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-gray-900 text-gray-100 font-sans h-screen flex flex-col overflow-hidden">
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans h-screen flex flex-col overflow-hidden transition-colors duration-300">
     <!-- Navbar injected by Navbar.js -->
 
     <div class="flex flex-1 overflow-hidden flex-col md:flex-row p-6 gap-6 overflow-y-auto">
@@ -20,8 +20,8 @@
             </div>
 
             <div class="flex items-center gap-4">
-                <label class="text-sm font-semibold text-gray-300">Language:</label>
-                <select id="language-select" class="bg-gray-700 text-white border border-gray-600 rounded px-3 py-1 focus:outline-none focus:border-blue-500 transition-colors text-sm">
+                <label class="text-sm font-semibold text-gray-700 dark:text-gray-300">Language:</label>
+                <select id="language-select" class="bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-300 dark:border-gray-600 rounded px-3 py-1 focus:outline-none focus:border-blue-500 transition-colors text-sm">
                     <option value="javascript">JavaScript</option>
                     <option value="python">Python</option>
                     <option value="java">Java</option>
@@ -29,7 +29,7 @@
                 </select>
             </div>
 
-            <textarea id="analyzer-code" class="flex-1 min-h-[300px] bg-gray-800 text-gray-200 p-4 font-mono text-sm border border-gray-700 rounded focus:border-blue-500 focus:outline-none resize-none" spellcheck="false">
+            <textarea id="analyzer-code" class="flex-1 min-h-[300px] bg-gray-50 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-4 font-mono text-sm border border-gray-300 dark:border-gray-700 rounded focus:border-blue-500 focus:outline-none resize-none transition-colors duration-300" spellcheck="false">
 // JavaScript Example: Linear Search (O(n))
 // Your function MUST be named 'solve' and accept an array 'arr'
 function solve(arr) {
@@ -46,13 +46,13 @@ function solve(arr) {
             </div>
 
             <!-- DSA Theory Documentation Section -->
-            <div class="bg-gray-800 rounded border border-gray-700 p-6 mt-4 flex-1">
-                <h3 class="font-bold text-lg text-blue-300 mb-4 border-b border-gray-700 pb-2"><i class="fas fa-book-open mr-2"></i>DSA Concept Guide (GFG Style)</h3>
+            <div class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-6 mt-4 flex-1 shadow-sm transition-colors duration-300">
+                <h3 class="font-bold text-lg text-blue-600 dark:text-blue-300 mb-4 border-b border-gray-200 dark:border-gray-700 pb-2"><i class="fas fa-book-open mr-2"></i>DSA Concept Guide (GFG Style)</h3>
 
-                <div class="space-y-4 text-sm text-gray-300 overflow-y-auto pr-2 max-h-64">
+                <div class="space-y-4 text-sm text-gray-600 dark:text-gray-300 overflow-y-auto pr-2 max-h-64">
                     <div>
-                        <h4 class="font-bold text-white mb-1">Time Complexity & Big O Notation</h4>
-                        <p class="leading-relaxed">Big O notation is used to describe the performance or complexity of an algorithm. It describes the worst-case scenario, indicating the maximum time an algorithm will take to complete as the input size <code class="bg-gray-900 px-1 rounded text-yellow-400">N</code> grows.</p>
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-1">Time Complexity & Big O Notation</h4>
+                        <p class="leading-relaxed">Big O notation is used to describe the performance or complexity of an algorithm. It describes the worst-case scenario, indicating the maximum time an algorithm will take to complete as the input size <code class="bg-gray-100 dark:bg-gray-900 px-1 rounded text-yellow-600 dark:text-yellow-400">N</code> grows.</p>
                         <ul class="list-disc pl-5 mt-2 space-y-1">
                             <li><strong class="text-blue-400">O(1) Constant:</strong> Time does not depend on input size. (e.g., Array index lookup)</li>
                             <li><strong class="text-green-400">O(N) Linear:</strong> Time grows proportionally with input size. (e.g., Linear Search)</li>
@@ -62,7 +62,7 @@ function solve(arr) {
                     </div>
 
                     <div>
-                        <h4 class="font-bold text-white mb-1">How the Analyzer Works</h4>
+                        <h4 class="font-bold text-gray-900 dark:text-white mb-1">How the Analyzer Works</h4>
                         <p class="leading-relaxed">When you click analyze for <strong>JavaScript</strong>, your code is benchmarked locally. Random arrays of varying sizes are passed to your function and execution time is plotted on the graph.</p>
                         <p class="leading-relaxed mt-2">For <strong>Python, Java, and C++</strong>, your code is sent to Gemini AI for static analysis. The AI calculates the asymptotic complexity and returns a detailed explanation of why it performs as it does.</p>
                     </div>
@@ -71,15 +71,15 @@ function solve(arr) {
         </div>
 
         <div class="w-full md:w-1/2 flex flex-col gap-4">
-             <div class="bg-gray-800 rounded border border-gray-700 p-4 flex flex-col h-full min-h-[400px]">
+             <div class="bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 p-4 flex flex-col h-full min-h-[400px] shadow-sm transition-colors duration-300">
                 <div class="flex justify-between items-center mb-4">
-                     <h3 class="font-bold text-gray-300">Analysis Results</h3>
-                     <span id="predicted-complexity" class="text-sm px-3 py-1 bg-gray-700 rounded text-blue-300 font-mono">Prediction: Ready</span>
+                     <h3 class="font-bold text-gray-800 dark:text-gray-300">Analysis Results</h3>
+                     <span id="predicted-complexity" class="text-sm px-3 py-1 bg-blue-50 dark:bg-gray-700 rounded text-blue-600 dark:text-blue-300 font-mono border border-blue-200 dark:border-transparent">Prediction: Ready</span>
                 </div>
                 <div class="flex-1 relative w-full h-full flex items-center justify-center">
                     <canvas id="analyzer-canvas"></canvas>
                 </div>
-                <div id="execution-logs" class="mt-4 p-4 bg-gray-900 border border-gray-700 rounded text-sm text-gray-300 flex-1 min-h-[150px] overflow-y-auto hidden">
+                <div id="execution-logs" class="mt-4 p-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded text-sm text-gray-800 dark:text-gray-300 flex-1 min-h-[150px] overflow-y-auto hidden transition-colors duration-300">
                     <!-- Execution output/errors/AI explanation will appear here -->
                 </div>
             </div>

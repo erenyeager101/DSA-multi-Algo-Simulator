@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AlgoVisualizer - Quiz Mode</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 font-sans h-screen flex flex-col overflow-hidden relative transition-colors duration-300">
+    <!-- Navbar injected by Navbar.js -->
+
+    <div class="flex flex-1 overflow-hidden p-6 justify-center items-center">
+        <div id="quiz-container" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl w-full max-w-2xl p-8 flex flex-col transition-colors duration-300 relative">
+
+            <div id="quiz-header" class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-blue-600 dark:text-blue-400"><i class="fas fa-brain mr-2"></i>DSA Quiz</h2>
+                <div class="text-sm font-mono bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full">
+                    Question <span id="current-question-num">1</span> of <span id="total-questions-num">5</span>
+                </div>
+            </div>
+
+            <div id="progress-bar-container" class="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full mb-8 overflow-hidden">
+                <div id="progress-bar" class="h-full bg-blue-500 transition-all duration-300" style="width: 20%;"></div>
+            </div>
+
+            <div id="question-area" class="flex-1 flex flex-col">
+                <h3 id="question-text" class="text-xl font-medium mb-6 text-gray-800 dark:text-gray-200 leading-relaxed">Loading question...</h3>
+                <div id="options-container" class="flex flex-col gap-3 flex-1">
+                    <!-- Options injected here -->
+                </div>
+            </div>
+
+            <div id="quiz-footer" class="mt-8 flex justify-between items-center border-t border-gray-200 dark:border-gray-700 pt-6">
+                <div id="feedback-text" class="text-sm font-medium"></div>
+                <button id="next-btn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded shadow transition-all disabled:opacity-50 disabled:cursor-not-allowed hidden">Next Question</button>
+            </div>
+
+            <!-- Result Overlay -->
+            <div id="result-overlay" class="absolute inset-0 bg-white dark:bg-gray-800 rounded-lg flex flex-col items-center justify-center p-8 hidden z-10">
+                <div class="w-24 h-24 bg-green-100 dark:bg-green-900/50 rounded-full flex items-center justify-center mb-6 text-green-500">
+                    <i class="fas fa-trophy text-5xl"></i>
+                </div>
+                <h2 class="text-3xl font-bold mb-2 text-gray-900 dark:text-white">Quiz Complete!</h2>
+                <p class="text-lg text-gray-600 dark:text-gray-400 mb-6">You scored <span id="final-score" class="font-bold text-blue-600 dark:text-blue-400">0</span> out of <span id="final-total">5</span></p>
+                <button id="restart-btn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105">Play Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import Navbar from './src/components/Navbar.js';
+        import QuizController from './src/controller/QuizController.js';
+        new Navbar();
+        new QuizController();
+    </script>
+</body>
+</html>
