@@ -3,8 +3,12 @@ import SelectionSort from '../algorithms/SelectionSort.js';
 import InsertionSort from '../algorithms/InsertionSort.js';
 import MergeSort from '../algorithms/MergeSort.js';
 import QuickSort from '../algorithms/QuickSort.js';
+import HeapSort from '../algorithms/HeapSort.js';
+import RadixSort from '../algorithms/RadixSort.js';
+import LinearSearch from '../algorithms/LinearSearch.js';
+import BinarySearch from '../algorithms/BinarySearch.js';
+import ReverseArray from '../algorithms/ReverseArray.js';
 import SortVisualizer from '../visualizer/SortVisualizer.js';
-import AIService from '../services/AIService.js';
 
 class VisualizerController {
     constructor() {
@@ -42,7 +46,10 @@ class VisualizerController {
             codePanel: document.getElementById('code-panel'),
             // Visual Debugger
             variablesDisplay: document.getElementById('variables-display'),
-            callstackDisplay: document.getElementById('callstack-display')
+            callstackDisplay: document.getElementById('callstack-display'),
+            // Complexity
+            complexityTime: document.getElementById('complexity-time'),
+            complexitySpace: document.getElementById('complexity-space')
         };
 
         this.init();
@@ -120,6 +127,11 @@ class VisualizerController {
             case 'insertion': this.algorithm = new InsertionSort(); break;
             case 'merge': this.algorithm = new MergeSort(); break;
             case 'quick': this.algorithm = new QuickSort(); break;
+            case 'heap': this.algorithm = new HeapSort(); break;
+            case 'radix': this.algorithm = new RadixSort(); break;
+            case 'linear': this.algorithm = new LinearSearch(); break;
+            case 'binary': this.algorithm = new BinarySearch(); break;
+            case 'reverse': this.algorithm = new ReverseArray(); break;
             default: this.algorithm = new BubbleSort();
         }
         this.updateAlgorithmInfo();
@@ -129,6 +141,10 @@ class VisualizerController {
     updateAlgorithmInfo() {
         this.renderCode(this.algorithm.code, []);
         this.dom.algoDesc.textContent = this.algorithm.description;
+        if (this.dom.complexityTime && this.algorithm.complexity) {
+            this.dom.complexityTime.textContent = this.algorithm.complexity.time.worst || this.algorithm.complexity.time.avg;
+            this.dom.complexitySpace.textContent = this.algorithm.complexity.space;
+        }
     }
 
     renderCode(code, activeLines = []) {
@@ -195,6 +211,13 @@ class VisualizerController {
         this.dom.progressSlider.disabled = false;
         this.play();
         this.dom.startBtn.innerHTML = '<i class="fas fa-pause mr-2"></i>Pause';
+
+        // Save progress
+        let viewed = JSON.parse(localStorage.getItem('viewedAlgorithms') || '[]');
+        if (!viewed.includes(this.algorithm.name)) {
+            viewed.push(this.algorithm.name);
+            localStorage.setItem('viewedAlgorithms', JSON.stringify(viewed));
+        }
     }
 
     togglePlay() {
