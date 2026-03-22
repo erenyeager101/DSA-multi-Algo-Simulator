@@ -207,6 +207,17 @@ class VisualizerController {
 
     start() {
         this.trace = this.algorithm.generateTrace(this.array);
+
+        // Pre-calculate cumulative stats for performance
+        let comparisons = 0;
+        let swaps = 0;
+        this.trace.forEach(step => {
+            if (step.type === 'compare') comparisons++;
+            if (step.type === 'swap') swaps++;
+            step.cumulativeComparisons = comparisons;
+            step.cumulativeSwaps = swaps;
+        });
+
         this.dom.progressSlider.max = this.trace.length - 1;
         this.dom.progressSlider.disabled = false;
         this.play();
@@ -321,13 +332,12 @@ class VisualizerController {
     }
 
     updateStatsFromTrace(index) {
-        // Simple counter
-        let c = 0, s = 0;
-        for(let i=0; i<=index; i++) {
-            if(this.trace[i].type === 'compare') c++;
-            if(this.trace[i].type === 'swap') s++;
-        }
-        this.updateStats(c, s, this.trace[index].description);
+        const step = this.trace[index];
+        this.updateStats(
+            step.cumulativeComparisons,
+            step.cumulativeSwaps,
+            step.description
+        );
     }
 
     updateStats(c, s, state) {
