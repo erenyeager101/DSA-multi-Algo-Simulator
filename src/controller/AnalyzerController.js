@@ -102,8 +102,19 @@ int solve(std::vector<int>& arr) {
                 if (result.type === 'ai') {
                     // Show explanation in logs
                     this.dom.logs.classList.remove('hidden');
-                    // Simple bold formatting
-                    this.dom.logs.innerHTML = result.explanation.replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
+                    // Simple bold formatting (secure version)
+                    this.dom.logs.textContent = '';
+                    const parts = result.explanation.split(/(\*\*.*?\*\*)/g);
+                    parts.forEach(part => {
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                            const b = document.createElement('b');
+                            b.className = 'text-white';
+                            b.textContent = part.slice(2, -2);
+                            this.dom.logs.appendChild(b);
+                        } else {
+                            this.dom.logs.appendChild(document.createTextNode(part));
+                        }
+                    });
                 } else {
                     this.dom.logs.classList.add('hidden');
                 }
