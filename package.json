@@ -2,9 +2,10 @@
   "name": "DSA-CP-ALgo",
   "version": "1.0.0",
   "description": "ADS-Cp-ALGO-SIMULATOR",
+  "type": "module",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test tests/*.test.js",
     "start": "google-chrome index.html",
     "serve": "python3 -m http.server 8000 || python -m http.server 8000"
   },
