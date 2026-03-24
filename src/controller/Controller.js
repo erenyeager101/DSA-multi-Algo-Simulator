@@ -5,6 +5,7 @@ import MergeSort from '../algorithms/MergeSort.js';
 import QuickSort from '../algorithms/QuickSort.js';
 import SortVisualizer from '../visualizer/SortVisualizer.js';
 import ComplexityAnalyzer from '../analyzer/ComplexityAnalyzer.js';
+import SecurityUtils from '../services/SecurityUtils.js';
 
 class Controller {
     constructor() {
@@ -189,8 +190,13 @@ class Controller {
             try {
                 // Allow UI update
                 await new Promise(r => setTimeout(r, 100));
-                const complexity = await this.analyzer.analyze(code);
-                this.elements.predictedComplexity.textContent = `Prediction: ${complexity}`;
+                const result = await this.analyzer.analyze(code);
+
+                if (result.error) {
+                    this.elements.predictedComplexity.textContent = `Prediction: Failed`;
+                } else {
+                    this.elements.predictedComplexity.textContent = `Prediction: ${result.complexity}`;
+                }
             } catch (error) {
                 console.error(error);
             } finally {
