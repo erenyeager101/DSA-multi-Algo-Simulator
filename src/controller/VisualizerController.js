@@ -150,6 +150,7 @@ class VisualizerController {
     renderCode(code, activeLines = []) {
         const lines = code.split('\n');
         this.dom.codeDisplay.innerHTML = '';
+        const activeLinesSet = new Set(activeLines);
         lines.forEach((line, index) => {
             const lineNum = index + 1;
             const lineEl = document.createElement('div');
@@ -173,7 +174,7 @@ class VisualizerController {
 
             codeEl.innerHTML = highlighted;
 
-            if (activeLines.includes(lineNum)) {
+            if (activeLinesSet.has(lineNum)) {
                 lineEl.classList.add('bg-blue-900/50', 'border-l-2', 'border-blue-400');
             } else {
                 lineEl.classList.add('border-l-2', 'border-transparent');
@@ -183,7 +184,7 @@ class VisualizerController {
             lineEl.appendChild(codeEl);
             this.dom.codeDisplay.appendChild(lineEl);
 
-            if (activeLines.includes(lineNum)) {
+            if (activeLinesSet.has(lineNum)) {
                 lineEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         });
