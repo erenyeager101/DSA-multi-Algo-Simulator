@@ -29,22 +29,22 @@ export default class LinearSearch extends SortAlgorithm {
         // Pick a random target from the array to guarantee finding it, or occasionally miss.
         const target = arr[Math.floor(Math.random() * n)];
 
-        trace.push(this.createStep('start', [], arr, sortedIndices, \`Starting Linear Search for target: \${target}\`, { n, target }, [1, 2], callStack));
+        trace.push(this.createStep('start', [], arr, sortedIndices, `Starting Linear Search for target: ${target}`, { n, target }, [1, 2], callStack));
 
         let found = false;
         for (let i = 0; i < n; i++) {
-            trace.push(this.createStep('compare', [i], arr, sortedIndices, \`Checking index \${i}\`, { n, i, target }, [3], callStack));
+            trace.push(this.createStep('compare', [i], arr, sortedIndices, `Checking index ${i}`, { n, i, target }, [3], callStack));
 
             if (arr[i] === target) {
                 sortedIndices.push(i); // Using sorted color (green) to highlight found target
-                trace.push(this.createStep('sorted', [i], arr, sortedIndices, \`Target \${target} found at index \${i}!\`, { n, i, target }, [4], callStack));
+                trace.push(this.createStep('sorted', [i], arr, sortedIndices, `Target ${target} found at index ${i}!`, { n, i, target }, [4], callStack));
                 found = true;
                 break;
             }
         }
 
         if (!found) {
-            trace.push(this.createStep('finish', [], arr, sortedIndices, \`Target \${target} not found.\`, { n, target }, [7], callStack));
+            trace.push(this.createStep('finish', [], arr, sortedIndices, `Target ${target} not found.`, { n, target }, [7], callStack));
         }
 
         return trace;
