@@ -207,6 +207,7 @@ class VisualizerController {
 
     start() {
         this.trace = this.algorithm.generateTrace(this.array);
+        this.precalculateStats(this.trace);
         this.dom.progressSlider.max = this.trace.length - 1;
         this.dom.progressSlider.disabled = false;
         this.play();
@@ -320,14 +321,20 @@ class VisualizerController {
         });
     }
 
-    updateStatsFromTrace(index) {
-        // Simple counter
-        let c = 0, s = 0;
-        for(let i=0; i<=index; i++) {
-            if(this.trace[i].type === 'compare') c++;
-            if(this.trace[i].type === 'swap') s++;
+    precalculateStats(trace) {
+        let comparisons = 0;
+        let swaps = 0;
+        for (const step of trace) {
+            if (step.type === 'compare') comparisons++;
+            if (step.type === 'swap') swaps++;
+            step.cumulativeComparisons = comparisons;
+            step.cumulativeSwaps = swaps;
         }
-        this.updateStats(c, s, this.trace[index].description);
+    }
+
+    updateStatsFromTrace(index) {
+        const step = this.trace[index];
+        this.updateStats(step.cumulativeComparisons, step.cumulativeSwaps, step.description);
     }
 
     updateStats(c, s, state) {

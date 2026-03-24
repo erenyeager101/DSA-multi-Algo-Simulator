@@ -229,6 +229,7 @@ class Controller {
 
     startVisualization() {
         this.trace = this.algorithm.generateTrace(this.array);
+        this.precalculateStats(this.trace);
         this.elements.progressSlider.max = this.trace.length - 1;
         this.play();
         this.elements.startBtn.innerHTML = '<i class="fas fa-pause mr-2"></i>Pause';
@@ -303,24 +304,20 @@ class Controller {
         this.updateProgress();
     }
 
-    updateStatsFromTrace(stepIndex) {
-        // To get accurate total comparisons/swaps up to this point, we need to count them
-        // or store cumulative stats in the trace.
-        // Storing in trace is better for performance than iterating every time.
-        // But iterating is easier to implement right now if I didn't store it.
-        // Let's iterate for now (trace length is usually < 1000 for N=100 so it's fast enough).
-
+    precalculateStats(trace) {
         let comparisons = 0;
         let swaps = 0;
-
-        for (let i = 0; i <= stepIndex; i++) {
-            const s = this.trace[i];
-            if (s.type === 'compare') comparisons++;
-            if (s.type === 'swap') swaps++;
+        for (const step of trace) {
+            if (step.type === 'compare') comparisons++;
+            if (step.type === 'swap') swaps++;
+            step.cumulativeComparisons = comparisons;
+            step.cumulativeSwaps = swaps;
         }
+    }
 
+    updateStatsFromTrace(stepIndex) {
         const currentStepObj = this.trace[stepIndex];
-        this.updateStats(comparisons, swaps, currentStepObj.description);
+        this.updateStats(currentStepObj.cumulativeComparisons, currentStepObj.cumulativeSwaps, currentStepObj.description);
     }
 
     updateStats(comp, swaps, state) {
