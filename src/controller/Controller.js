@@ -230,6 +230,15 @@ class Controller {
     startVisualization() {
         this.trace = this.algorithm.generateTrace(this.array);
         this.precalculateStats(this.trace);
+
+        let c = 0, s = 0;
+        for (let i = 0; i < this.trace.length; i++) {
+            if (this.trace[i].type === 'compare') c++;
+            if (this.trace[i].type === 'swap') s++;
+            this.trace[i].cumulativeComparisons = c;
+            this.trace[i].cumulativeSwaps = s;
+        }
+
         this.elements.progressSlider.max = this.trace.length - 1;
         this.play();
         this.elements.startBtn.innerHTML = '<i class="fas fa-pause mr-2"></i>Pause';
@@ -318,6 +327,12 @@ class Controller {
     updateStatsFromTrace(stepIndex) {
         const currentStepObj = this.trace[stepIndex];
         this.updateStats(currentStepObj.cumulativeComparisons, currentStepObj.cumulativeSwaps, currentStepObj.description);
+    updateStatsFromTrace(stepIndex) {
+        const currentStepObj = this.trace[stepIndex];
+        const comparisons = currentStepObj.cumulativeComparisons || 0;
+        const swaps = currentStepObj.cumulativeSwaps || 0;
+
+        this.updateStats(comparisons, swaps, currentStepObj.description);
     }
 
     updateStats(comp, swaps, state) {
