@@ -4,7 +4,7 @@
   "description": "ADS-Cp-ALGO-SIMULATOR",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "google-chrome index.html",
     "serve": "python3 -m http.server 8000 || python -m http.server 8000"
   },
@@ -21,5 +21,11 @@
   "bugs": {
     "url": "https://github.com/erenyeager101"
   },
-  "homepage": "https://github.com/erenyeager101"
+  "homepage": "https://github.com/erenyeager101",
+  "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
+    "babel-jest": "^30.3.0",
+    "jest": "^30.3.0"
+  }
 }
