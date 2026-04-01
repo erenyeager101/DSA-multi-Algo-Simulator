@@ -216,7 +216,6 @@
 						await sleep(time_delay).then(() => {
 							if(arr[j] > arr[j+1]) {
 								swapEl(j, j+1)
-								// console.log(j, j+1);
 							}
 							else {
 								var p = document.querySelectorAll('.rect');
@@ -224,7 +223,6 @@
 								p[j + 1].style.background = 'red';
 							}
 						});
-						// console.log(j, j+1);
 						
 				}	
 			}
@@ -253,7 +251,6 @@
 				await sleep(time_delay).then(() => {
 					if(pos != i) {
 						swapEl(pos, i);
-						// console.log(i, j)				
 					}				
 				})	
 
@@ -294,7 +291,6 @@
 				}
 				else{
 					let a = +e.target.value
-					console.log(a);
 					randomize_an_array();
 					time_delay = a;
 					menu(option);
