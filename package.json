@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "ADS-Cp-ALGO-SIMULATOR",
   "main": "index.html",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "start": "google-chrome index.html",
     "serve": "python3 -m http.server 8000 || python -m http.server 8000"
   },
