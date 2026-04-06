@@ -87,7 +87,7 @@ export default class QuizController {
         const q = this.questions[this.currentQuestionIndex];
 
         this.dom.currentNum.textContent = this.currentQuestionIndex + 1;
-        this.dom.progressBar.style.width = \`\${((this.currentQuestionIndex + 1) / this.questions.length) * 100}%\`;
+        this.dom.progressBar.style.width = `${((this.currentQuestionIndex + 1) / this.questions.length) * 100}%`;
 
         this.dom.questionText.textContent = q.question;
         this.dom.optionsContainer.innerHTML = '';
