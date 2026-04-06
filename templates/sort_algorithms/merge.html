@@ -103,7 +103,6 @@
 
 	async function sort(low, high) {
 		if(low >= high) return;
-		console.log(low, high);
 		let mid = Math.floor((low + high) / 2);
 		await sort(low, mid);
 		await sort(mid + 1, high);
@@ -120,7 +119,6 @@
 		let i = low;
 		let j = mid + 1;
 		let counter = 0;
-		console.log(i, mid, j, high);
 		while(i <= mid && j <= high) {
 			if(arr[i] < arr[j]) {
 				temp[counter] = arr[i];
