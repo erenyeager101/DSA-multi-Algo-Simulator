@@ -4,6 +4,7 @@ export default class ComplexityAnalyzer {
     constructor(canvasId) {
         this.canvasId = canvasId;
         this.chart = null;
+        this.cache = new Map();
     }
 
     /**
@@ -46,6 +47,7 @@ export default class ComplexityAnalyzer {
                 this.chart.destroy();
                 this.chart = null;
             }
+            if (this.cache.has(userCode)) return this.cache.get(userCode);
             try {
                 const analysisText = await AIService.optimizeCode(userCode);
 
@@ -54,7 +56,9 @@ export default class ComplexityAnalyzer {
                 const match = analysisText.match(/Complexity:\s*(O\([^\)]+\))/i);
                 const complexity = match ? match[1] : "Check Explanation";
 
-                return { complexity, type: 'ai', explanation: analysisText };
+                const result = { complexity, type: 'ai', explanation: analysisText };
+                this.cache.set(userCode, result);
+                return result;
             } catch(e) {
                 return { error: `AI Analysis Error: ${e.message}` };
             }
