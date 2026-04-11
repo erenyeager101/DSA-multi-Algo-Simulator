@@ -22,41 +22,41 @@ export default class QuickSort extends SortAlgorithm {
         const trace = [];
         const arr = [...array];
         const n = arr.length;
-        const sortedIndices = [];
+        const sortedSet = new Set();
         const callStack = ['quickSort(arr)'];
 
         trace.push(this.createStep('start', [], arr, [], 'Starting Quick Sort', { low: 0, high: n-1 }, [1], callStack));
 
-        this.quickSortHelper(arr, 0, n - 1, trace, sortedIndices, callStack);
+        this.quickSortHelper(arr, 0, n - 1, trace, sortedSet, callStack);
 
-        for(let i=0; i<n; i++) if(!sortedIndices.includes(i)) sortedIndices.push(i);
-        trace.push(this.createStep('finish', [], arr, sortedIndices, 'Sorting Complete', {}, [], callStack));
+        for(let i=0; i<n; i++) sortedSet.add(i);
+        trace.push(this.createStep('finish', [], arr, Array.from(sortedSet), 'Sorting Complete', {}, [], callStack));
         return trace;
     }
 
-    quickSortHelper(arr, low, high, trace, sortedIndices, callStack) {
+    quickSortHelper(arr, low, high, trace, sortedSet, callStack) {
         if (low < high) {
-            trace.push(this.createStep('highlight', [], arr, sortedIndices, `Condition low < high met`, { low, high }, [2], callStack));
+            trace.push(this.createStep('highlight', [], arr, Array.from(sortedSet), `Condition low < high met`, { low, high }, [2], callStack));
 
             callStack.push(`partition(arr, ${low}, ${high})`);
             const pi = this.partition(arr, low, high, trace, callStack);
             callStack.pop();
 
             // pi is now sorted
-            if (!sortedIndices.includes(pi)) sortedIndices.push(pi);
-            trace.push(this.createStep('sorted', [pi], arr, sortedIndices, `Pivot ${arr[pi]} is in correct position`, { low, high, pi }, [3], callStack));
+            sortedSet.add(pi);
+            trace.push(this.createStep('sorted', [pi], arr, Array.from(sortedSet), `Pivot ${arr[pi]} is in correct position`, { low, high, pi }, [3], callStack));
 
             callStack.push(`quickSort(arr, ${low}, ${pi - 1})`);
-            trace.push(this.createStep('highlight', [], arr, sortedIndices, `Sorting left of pivot`, { low, high, pi }, [4], callStack));
-            this.quickSortHelper(arr, low, pi - 1, trace, sortedIndices, callStack);
+            trace.push(this.createStep('highlight', [], arr, Array.from(sortedSet), `Sorting left of pivot`, { low, high, pi }, [4], callStack));
+            this.quickSortHelper(arr, low, pi - 1, trace, sortedSet, callStack);
             callStack.pop();
 
             callStack.push(`quickSort(arr, ${pi + 1}, ${high})`);
-            trace.push(this.createStep('highlight', [], arr, sortedIndices, `Sorting right of pivot`, { low, high, pi }, [5], callStack));
-            this.quickSortHelper(arr, pi + 1, high, trace, sortedIndices, callStack);
+            trace.push(this.createStep('highlight', [], arr, Array.from(sortedSet), `Sorting right of pivot`, { low, high, pi }, [5], callStack));
+            this.quickSortHelper(arr, pi + 1, high, trace, sortedSet, callStack);
             callStack.pop();
         } else if (low === high) {
-             if (!sortedIndices.includes(low)) sortedIndices.push(low);
+             sortedSet.add(low);
         }
     }
 
