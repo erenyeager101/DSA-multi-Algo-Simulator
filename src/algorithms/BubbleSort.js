@@ -58,8 +58,9 @@ export default class BubbleSort extends SortAlgorithm {
             // Optimization: if no swaps, array is sorted
             if (!swapped) {
                  // Mark remaining as sorted
+                 const sortedSet = new Set(sortedIndices);
                  for(let k = 0; k < n - 1 - i; k++) {
-                     if (!sortedIndices.includes(k)) sortedIndices.push(k);
+                     if (!sortedSet.has(k)) sortedIndices.push(k);
                  }
                  trace.push(this.createStep('sorted', [], arr, sortedIndices, 'Early termination: Array is sorted', { n, i, swapped }, [12], callStack));
                  break;
