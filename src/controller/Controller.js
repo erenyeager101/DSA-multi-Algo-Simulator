@@ -189,7 +189,10 @@ class Controller {
             try {
                 // Allow UI update
                 await new Promise(r => setTimeout(r, 100));
-                const complexity = await this.analyzer.analyze(code);
+                const result = await this.analyzer.analyze(code);
+                // The complexity analyzer may return a string or an object depending on the implementation
+                // Looking at src/analyzer/ComplexityAnalyzer.js: analyze() returns { complexity, type, explanation } or { error }
+                const complexity = result.complexity || result;
                 this.elements.predictedComplexity.textContent = `Prediction: ${complexity}`;
             } catch (error) {
                 console.error(error);

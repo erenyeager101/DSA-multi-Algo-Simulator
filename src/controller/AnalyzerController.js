@@ -1,4 +1,5 @@
 import ComplexityAnalyzer from '../analyzer/ComplexityAnalyzer.js';
+import SecurityUtils from '../services/SecurityUtils.js';
 
 export default class AnalyzerController {
     constructor() {
@@ -103,7 +104,8 @@ int solve(std::vector<int>& arr) {
                     // Show explanation in logs
                     this.dom.logs.classList.remove('hidden');
                     // Simple bold formatting
-                    this.dom.logs.innerHTML = result.explanation.replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
+                    const escaped = SecurityUtils.escapeHTML(result.explanation);
+                    this.dom.logs.innerHTML = escaped.replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
                 } else {
                     this.dom.logs.classList.add('hidden');
                 }

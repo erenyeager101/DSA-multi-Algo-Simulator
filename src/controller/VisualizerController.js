@@ -9,6 +9,7 @@ import LinearSearch from '../algorithms/LinearSearch.js';
 import BinarySearch from '../algorithms/BinarySearch.js';
 import ReverseArray from '../algorithms/ReverseArray.js';
 import SortVisualizer from '../visualizer/SortVisualizer.js';
+import SecurityUtils from '../services/SecurityUtils.js';
 
 class VisualizerController {
     constructor() {
@@ -163,8 +164,7 @@ class VisualizerController {
             codeEl.className = 'whitespace-pre';
             // Simple syntax highlighting classes
             // We need to be careful with replace, replacing numbers before we add our own spans.
-            let highlighted = line
-                .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;"); // Escape HTML
+            let highlighted = SecurityUtils.escapeHTML(line);
 
             highlighted = highlighted
                 .replace(/(function|let|const|var|if|else|while|for|return)\b/g, '<span class="text-pink-400">$1</span>')
