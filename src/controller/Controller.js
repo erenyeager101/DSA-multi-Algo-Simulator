@@ -235,6 +235,7 @@ class Controller {
 
     startVisualization() {
         this.trace = this.algorithm.generateTrace(this.array);
+        this.precalculateStats(this.trace);
 
         let c = 0, s = 0;
         for (let i = 0; i < this.trace.length; i++) {
@@ -318,6 +319,20 @@ class Controller {
         this.updateProgress();
     }
 
+    precalculateStats(trace) {
+        let comparisons = 0;
+        let swaps = 0;
+        for (const step of trace) {
+            if (step.type === 'compare') comparisons++;
+            if (step.type === 'swap') swaps++;
+            step.cumulativeComparisons = comparisons;
+            step.cumulativeSwaps = swaps;
+        }
+    }
+
+    updateStatsFromTrace(stepIndex) {
+        const currentStepObj = this.trace[stepIndex];
+        this.updateStats(currentStepObj.cumulativeComparisons, currentStepObj.cumulativeSwaps, currentStepObj.description);
     updateStatsFromTrace(stepIndex) {
         const currentStepObj = this.trace[stepIndex];
         const comparisons = currentStepObj.cumulativeComparisons || 0;

@@ -207,6 +207,7 @@ class VisualizerController {
 
     start() {
         this.trace = this.algorithm.generateTrace(this.array);
+        this.precalculateStats(this.trace);
 
         let c = 0, s = 0;
         for (let i = 0; i < this.trace.length; i++) {
@@ -329,6 +330,20 @@ class VisualizerController {
         });
     }
 
+    precalculateStats(trace) {
+        let comparisons = 0;
+        let swaps = 0;
+        for (const step of trace) {
+            if (step.type === 'compare') comparisons++;
+            if (step.type === 'swap') swaps++;
+            step.cumulativeComparisons = comparisons;
+            step.cumulativeSwaps = swaps;
+        }
+    }
+
+    updateStatsFromTrace(index) {
+        const step = this.trace[index];
+        this.updateStats(step.cumulativeComparisons, step.cumulativeSwaps, step.description);
     updateStatsFromTrace(index) {
         const step = this.trace[index];
         const c = step.cumulativeComparisons || 0;
