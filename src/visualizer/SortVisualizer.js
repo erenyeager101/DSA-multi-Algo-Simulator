@@ -44,6 +44,13 @@ export default class SortVisualizer {
         // Find max value for scaling
         const maxVal = Math.max(...array, 10); // Avoid div by zero
 
+        let sortedSet = null;
+        let indicesSet = null;
+        if (step) {
+            if (step.sortedIndices) sortedSet = new Set(step.sortedIndices);
+            if (step.indices) indicesSet = new Set(step.indices);
+        }
+
         array.forEach((value, i) => {
             const barHeight = (value / maxVal) * (height * 0.9);
             const x = xStart + i * (barWidth + gap);
@@ -55,14 +62,14 @@ export default class SortVisualizer {
             if (step) {
                 // Check if sorted first (lowest priority overrides default, but high priority overrides sorted?)
                 // Usually sorted is permanent green.
-                if (step.sortedIndices && step.sortedIndices.includes(i)) {
+                if (sortedSet && sortedSet.has(i)) {
                     color = '#4ade80'; // Green (Tailwind green-400)
                 }
 
                 // Active operations override sorted color (e.g. if we are comparing sorted elements for some reason, though bubble sort doesn't usually)
-                if (step.type === 'compare' && step.indices.includes(i)) {
+                if (step.type === 'compare' && indicesSet && indicesSet.has(i)) {
                     color = '#facc15'; // Yellow (Tailwind yellow-400)
-                } else if (step.type === 'swap' && step.indices.includes(i)) {
+                } else if (step.type === 'swap' && indicesSet && indicesSet.has(i)) {
                     color = '#f87171'; // Red (Tailwind red-400)
                 }
             }
